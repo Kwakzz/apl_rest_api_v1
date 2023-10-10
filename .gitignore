@@ -1,0 +1,13 @@
+# Ignore vendor directory created by Composer
+/vendor/
+
+# Ignore Composer's autoloader files
+/vendor/autoload.php
+/vendor/composer/
+
+# Ignore any log files (adjust file extensions as needed)
+*.log
+
+# Ignore any temporary files or directories
+/temp/
+/tmp/
