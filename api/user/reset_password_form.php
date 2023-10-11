@@ -37,8 +37,8 @@ $user->activation_code = $_GET['password_reset_token'];
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
+            margin: 0; 
+            padding: 0; 
         }
 
         .container {

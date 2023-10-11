@@ -29,7 +29,6 @@
 
     // request body contains user details (fname, lname, gender, date of birth)
     // the other fields are left blank and can be updated later
-    // it also contains the user's category (whether fan, player, or coach)
     $user->email_address = $requestBody->email_address;
     $user->fname = $requestBody->fname;
     $user->lname = $requestBody->lname;
