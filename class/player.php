@@ -239,6 +239,52 @@
         }
 
         /**
+         * This function gets all men's players.
+         */
+        public function getMensPlayers() {
+            $sqlQuery = "SELECT * 
+            FROM ". $this->db_table. 
+            " WHERE 
+            gender = 'Male'";
+
+            $stmt = $this->conn->prepare($sqlQuery);
+
+            $stmt->execute();
+
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($dataRows) {
+                return json_encode($dataRows);
+            }       
+            // if no player is found     
+            return "";
+        }
+
+        /**
+         * This function gets all women's players.
+         */
+        public function getWomensPlayers() {
+            $sqlQuery = "SELECT * 
+            FROM ". $this->db_table. 
+            " WHERE 
+            gender = 'Female'";
+
+            $stmt = $this->conn->prepare($sqlQuery);
+
+            $stmt->execute();
+
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($dataRows) {
+                return json_encode($dataRows);
+            }       
+            // if no player is found     
+            return "";
+        }
+
+
+
+        /**
          * This function gets all active men's players.
          */
         public function getActiveMensPlayers() {
@@ -253,10 +299,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }       
             // if no player is found     
             return "";
@@ -274,10 +320,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }       
             // if no player is found     
             return "";
@@ -296,10 +342,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }       
             // if no player is found     
             return "";
@@ -321,10 +367,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }       
             // if no player is found     
             return "";
@@ -346,10 +392,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }       
             // if no player is found     
             return "";
@@ -368,10 +414,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }
             // if no player is found
             return "";
@@ -392,10 +438,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }
             // if no player is found
             return "";
@@ -416,10 +462,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }
             // if no player is found
             return "";
@@ -440,10 +486,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }
             // if no player is found
             return "";
@@ -464,10 +510,10 @@
 
             $stmt->execute();
 
-            $dataRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($dataRow) {
-                return json_encode($dataRow);
+            if ($dataRows) {
+                return json_encode($dataRows);
             }
             // if no player is found
             return "";
