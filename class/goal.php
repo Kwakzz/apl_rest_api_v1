@@ -527,7 +527,7 @@
             GROUP BY ".$this->team_table.".team_id
             ORDER BY no_of_clean_sheets DESC
         )
-        UNION
+        UNION 
         (
             SELECT
             COUNT(*) as no_of_clean_sheets,

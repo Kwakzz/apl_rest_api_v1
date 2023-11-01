@@ -13,10 +13,15 @@
         public $cover_pic;
         public $time_published;
 
-        // helper tables
-        private $news_item_tag_table = "NewsItemTag";
+        // helper columns
+        public $news_tag_id;
+        public $news_tag_name;
 
+        // helper tables
         private $news_tag_table = "NewsTag";
+
+        // helper variables
+        public $news_item_tag; 
         
         // constructor
         /**
@@ -74,14 +79,14 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * This function gets a news item by id
+         * This function gets a news item by id. It also gets the tags associated with the news item.
          */
         public function getNewsItemById () {
             $sqlQuery = "SELECT *
                         FROM
                         ". $this->db_table ."
                         WHERE 
-                            news_item_id = :news_item_id
+                            ". $this->db_table .".news_item_id = :news_item_id
                         ";
                 
             $stmt = $this->conn->prepare($sqlQuery);
@@ -93,12 +98,11 @@
 
             $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // if data row is not empty
             if ($dataRow) {
+                // Encode the result as JSON
                 return json_encode($dataRow);
             }
-            // if no news item is found
-            return "";
+
         }
 
         /**
@@ -109,6 +113,29 @@
                         FROM
                         ". $this->db_table."
                         ORDER BY time_published DESC";
+                
+            $stmt = $this->conn->prepare($sqlQuery);
+
+            $stmt->execute();
+
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // if data row is not empty
+            if ($dataRows) {
+                return json_encode($dataRows);
+            }
+            // if no news items are found
+            return "";
+        }
+
+        /**
+         * This function gets all the news item tags.
+         */
+        public function getNewsItemTags () {
+            $sqlQuery = "SELECT *
+                        FROM
+                        ". $this->news_tag_table."
+                        ORDER BY news_tag_name ASC";
                 
             $stmt = $this->conn->prepare($sqlQuery);
 

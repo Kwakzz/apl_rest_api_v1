@@ -4,33 +4,37 @@
     ini_set('display_errors', 1);
 
     require_once '../../config/database.php';
-    require_once '../../class/player.php';
+    require_once '../../class/user.php';
 
     // allow all kinds of request
     header('Access-Control-Allow-Origin: *');
 
-    // allow GET REQUESTS
+    // allow only POST REQUESTS
     header('Access-Control-Allow-Methods: POST');
 
     // content type
     header('Content-Type: application/json');
+
+    // connect to database
+    $database = new Database();
+    $db = $database->getConnection();
 
     // get request body
     $requestBody = file_get_contents('php://input');
     // decode request body as PHP array
     $requestBody = json_decode($requestBody);
 
-    $database = new Database();
-    $db = $database->getConnection();
+    // create a new user object
+    $user = new User($db);
 
-    // create a new player object
-    $player = new Player($db);
+    // get user_id from request body
+    $user->user_id = $requestBody->user_id;
 
-    // set player id
-    $player->player_id = $requestBody->player_id;
+    // delete user
+    echo $user->deleteUser();
+    
 
-    echo $player->hasUserAccount();
-
+    
     
 
 ?>

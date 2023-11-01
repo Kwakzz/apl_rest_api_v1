@@ -34,12 +34,6 @@
 
         // Helper columns
         public $team_name;
-        public $position_name;
-        private $position_id;
-        public $height;
-        public $weight;
-        public $year_group;
-        public $is_retired;
         private $reset_token_id;
         public $password_reset_token;
         public $password_reset_expiry;
@@ -47,8 +41,6 @@
 
         // Helper tables
         private $db_table_team = "Team";
-        private $db_table_player = "Player";
-        private $db_table_coach = "Coach";
         private $password_reset_table = "PasswordResetTemp";
 
         // Db connection
@@ -476,7 +468,7 @@
         /**
          * This function enables a user to sign up
          */
-        public function createUser(){
+        public function signUp(){
 
             // check if there are inactive users and delete them
             if ($this->checkInactiveUsers()) {
@@ -536,90 +528,6 @@
             
         }
 
-         /**
-         * This function creates a player profile and inserts it into the player table
-         * It uses the user's details.
-         */
-        public function createPlayerProfile() {
-
-            // get user id
-            $this->getUserId();
-
-            // get team id
-            $this->getTeamId();
-
-            $sqlQuery = "INSERT INTO
-                        ". $this->db_table_player .
-                        "(user_id, fname, lname, gender, date_of_birth, team_id)
-                        VALUES(:user_id, :fname, :lname, :gender, :date_of_birth, :team_id)";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-            $this->gender=htmlspecialchars(strip_tags($this->gender));
-            $this->date_of_birth=htmlspecialchars(strip_tags($this->date_of_birth));
-
-            // bind data
-
-            $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-            $stmt->bindParam(':gender', $this->gender);
-            $stmt->bindParam(':date_of_birth', $this->date_of_birth);
-            $stmt->bindParam(':team_id', $this->team_id);
-
-            if($stmt->execute()){
-                http_response_code(201);
-                return true;
-            }
-            return false;
-            
-        }
-
-        /**
-         * This function creates a coach profile and inserts it into the coach table
-         * It uses the user's details.
-         */
-        public function createCoachProfile() {
-
-            // get user id
-            $this->getUserId();
-
-            // get team id
-            $this->getTeamId();
-
-            $sqlQuery = "INSERT INTO
-                        ". $this->db_table_coach .
-                        "(user_id, fname, lname, gender, date_of_birth, team_id)
-                        VALUES(:user_id, :fname, :lname, :gender, :date_of_birth, :team_id)";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-            $this->gender=htmlspecialchars(strip_tags($this->gender));
-            $this->date_of_birth=htmlspecialchars(strip_tags($this->date_of_birth));
-
-            // bind data
-
-            $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-            $stmt->bindParam(':gender', $this->gender);
-            $stmt->bindParam(':date_of_birth', $this->date_of_birth);
-            $stmt->bindParam(':team_id', $this->team_id);
-
-            if($stmt->execute()){
-                http_response_code(201);
-                return true;
-            }
-            return false;
-            
-        }
-
 
         // --- READ FUNCTIONS ---
 
@@ -627,7 +535,7 @@
         /**
          * This function enables a user to sign in
          */
-        public function logIn(){
+        public function signIn(){
 
             // check if there are inactive users and delete them
             if ($this->checkInactiveUsers()){
@@ -650,9 +558,7 @@
                         player_id
                       FROM
                         ". $this->db_table ."
-                    LEFT JOIN
-                        ". $this->db_table_player ." ON ".$this->db_table.".user_id = ".$this->db_table_player.".user_id
-                    WHERE 
+                      WHERE 
                        email_address = :email_address";
 
             $stmt = $this->conn->prepare($sqlQuery);
@@ -686,17 +592,7 @@
             $sqlQuery = "SELECT * 
                         FROM " . $this->db_table . "
                         WHERE is_active = 0 
-                        AND activation_expiry < NOW()
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM $this->db_table_player
-                            WHERE $this->db_table_player.user_id = " . $this->db_table . ".user_id
-                        )
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM $this->db_table_coach
-                            WHERE $this->db_table_coach.user_id = " . $this->db_table . ".user_id
-                        )";
+                        AND activation_expiry < NOW()";
 
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->execute();
@@ -733,84 +629,6 @@
             return -1;
         }
 
-    
-
-        /**
-         * This function checks if a user is a player using their first and last name
-         */
-        public function playerProfileExists(){
-
-
-            $sqlQuery = "SELECT
-            fname, lname, date_of_birth
-            FROM
-            ". $this->db_table_player ."
-            WHERE 
-            fname = :fname
-            AND
-            lname = :lname
-            AND
-            date_of_birth = :date_of_birth
-            ";
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-
-            // bind data
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-            $stmt->bindParam(':date_of_birth', $this->date_of_birth);
-
-            // execute query
-            $stmt->execute();
-
-            // get data
-            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($dataRow) {
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * This function checks if a user is a coach using their first name, last name and user id
-         */
-        public function coachProfileExists(){
-
-            $sqlQuery = "SELECT
-            fname, lname
-            FROM
-            ". $this->db_table_coach ."
-            WHERE 
-            fname = :fname
-            AND
-            lname = :lname
-            AND
-            date_of_birth = :date_of_birth
-            ";
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-
-            // bind data
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-            $stmt->bindParam(':date_of_birth', $this->date_of_birth);
-
-            // execute query
-            $stmt->execute();
-
-            // get data
-            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($dataRow) {
-                return true;
-            }
-            return false;
-        }
 
         /**
          * This function checks returns a player with a given first and last name from the user table
@@ -844,76 +662,6 @@
                 return json_encode($dataRow);
             }
             // if no such user exists
-            return "";
-
-        }
-
-        /**
-         * This function returns a list of players with a particular first and last name
-         */
-        public function getPlayersByName() {
-            $sqlQuery = "SELECT
-            *
-            FROM
-            ". $this->db_table_player ."
-            WHERE
-            fname = :fname
-            AND
-            lname = :lname";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-
-            // execute query
-            $stmt->execute();
-
-            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($dataRows) {
-                return json_encode($dataRows);
-            }
-
-            return "";
-
-        }
-
-        /**
-         * This function returns a list of players with a particular first and last name
-         */
-        public function getCoachesByName() {
-            $sqlQuery = "SELECT
-            *
-            FROM
-            ". $this->db_table_coach ."
-            WHERE
-            fname = :fname
-            AND
-            lname = :lname";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-
-            // execute query
-            $stmt->execute();
-
-            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($dataRows) {
-                return json_encode($dataRows);
-            }
-
             return "";
 
         }
@@ -954,75 +702,7 @@
             }
             return false;
         }
-
-        /**
-         * This function links a user to his/her player profile via the user's id
-         */
-        public function linkUserToPlayerProfile(){
-
-            // get user's id
-            $this->getUserId();
-
-            $sqlQuery = "UPDATE
-                        ". $this->db_table_player ."
-                    SET
-                        user_id = :user_id
-                    WHERE 
-                        fname = :fname
-                        AND
-                        lname = :lname
-                        ";
-        
-            $stmt = $this->conn->prepare($sqlQuery);
-        
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-        
-            // bind data
-            $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-        
-            if($stmt->execute()){
-                http_response_code(200);
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * This function links a user to his/her coach profile via the user's id
-         */
-        public function linkUserToCoachProfile(){
-
-            // get user's id
-            $this->getUserId();
-
-            $sqlQuery = "UPDATE
-                        ". $this->db_table_coach ."
-                    SET
-                        user_id = :user_id
-                    WHERE 
-                        fname = :fname
-                        AND
-                        lname = :lname";
-        
-            $stmt = $this->conn->prepare($sqlQuery);
-        
-            $this->fname=htmlspecialchars(strip_tags($this->fname));
-            $this->lname=htmlspecialchars(strip_tags($this->lname));
-        
-            // bind data
-            $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':fname', $this->fname);
-            $stmt->bindParam(':lname', $this->lname);
-        
-            if($stmt->execute()){
-                http_response_code(200);
-                return true;
-            }
-            return false;
-        }
+  
 
 
         /**
@@ -1147,9 +827,7 @@
             $sqlQuery = "DELETE FROM " .
                 $this->db_table .
                 " WHERE is_active = 0 
-                AND activation_expiry < NOW()
-                AND user_id NOT IN (SELECT user_id FROM ". $this->db_table_player .")
-                AND user_id NOT IN (SELECT user_id FROM ". $this->db_table_coach .")";
+                AND activation_expiry < NOW()";
             
             $stmt = $this->conn->prepare($sqlQuery);
             if ($stmt->execute()) {
@@ -1165,9 +843,10 @@
 
         
         /**
-         * This function adds a new fan to the database
+         * This function adds a new user to the database.
+         * This done by the admin.
          */
-        public function addFan(){
+        public function addUser(){
 
             // check if there are inactive users and delete them
             if ($this->checkInactiveUsers()) {
@@ -1234,24 +913,13 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * This function gets all fans from the database
-         * Fans are users who have not created a player or coach profile 
+         * This function gets all regular users from the database. 
+         * Regular users don't have admin status.
          */
-        public function getAllFans() {
+        public function getAllRegularUsers() {
             $sqlQuery ="SELECT *
                         FROM " . $this->db_table . "
-                        WHERE is_active = 1
-                        AND is_admin = 0
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM " . $this->db_table_player . "
-                            WHERE " . $this->db_table_player . ".user_id = " . $this->db_table . ".user_id
-                        )
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM " . $this->db_table_coach . "
-                            WHERE " . $this->db_table_coach . ".user_id = " . $this->db_table . ".user_id
-                        )";
+                        WHERE is_admin = 0";
 
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->execute();
@@ -1268,18 +936,7 @@
         public function getAllAdmins() {
             $sqlQuery ="SELECT *
                         FROM " . $this->db_table . "
-                        WHERE is_active = 1
-                        AND is_admin = 1
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM " . $this->db_table_player . "
-                            WHERE " . $this->db_table_player . ".user_id = " . $this->db_table . ".user_id
-                        )
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM " . $this->db_table_coach . "
-                            WHERE " . $this->db_table_coach . ".user_id = " . $this->db_table . ".user_id
-                        )";
+                        WHERE is_admin = 1";
 
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->execute();
@@ -1296,9 +953,10 @@
         // --- UPDATE FUNCTIONS ---
 
         /**
-         * This function edits a fan's details
+         * This function edits a user's details.
+         * This is done by the admin.
          */
-        public function editFan () {
+        public function editUser () {
 
             // get team id from team name
             $this->getTeamId();
@@ -1342,9 +1000,9 @@
         
 
         /**
-         * This function activates or deactivates a fan's account
+         * This function activates or deactivates a user's account
          */
-        public function activateOrDeactivateFan() {
+        public function activateOrDeactivateUser() {
 
             $sqlQuery = "UPDATE
                         ". $this->db_table ."
@@ -1369,9 +1027,9 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function deletes a fan's account
+         * This function deletes a user's account
          */
-        public function deleteFan() {
+        public function deleteUser() {
 
             $sqlQuery = "DELETE FROM " . 
             $this->db_table . 

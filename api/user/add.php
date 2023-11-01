@@ -5,6 +5,16 @@
 
     require_once '../../config/database.php';
     require_once '../../class/user.php';
+    require_once '../../config/email_auth.php';
+
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+    require '../../vendor/autoload.php';
+
+    // new PHPMailer object
+    require_once '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+    require_once '../../vendor/phpmailer/phpmailer/src/SMTP.php';
+
 
     // allow all kinds of request
     header('Access-Control-Allow-Origin: *');
@@ -27,25 +37,28 @@
     // create a new user object
     $user = new User($db);
 
-    // request body contains user details (fname, lname, gender, date of birth)
-    // the other fields are left blank and can be updated later
-    // it also contains the user's category (whether fan, player, or coach)
+    // get parameters from sign up form and assign them to user object properties
     $user->email_address = $requestBody->email_address;
+    $user->user_password = $requestBody->user_password;
     $user->fname = $requestBody->fname;
     $user->lname = $requestBody->lname;
+    $user->mobile_number = $requestBody->mobile_number;
     $user->gender = $requestBody->gender;
     $user->date_of_birth = $requestBody->date_of_birth;
     $user->team_name = $requestBody->team_name;
+    $user->is_admin = $requestBody->is_admin;
 
+    // sign in user
+    $result = $user->addUser();
+    
+    echo $result;
 
-    if ($user->coachProfileExists()) {
-        echo $user->linkUserToCoachProfile();
+    if ($result) {
+        $mail = new PHPMailer(true);
+        setupSMTP($mail);
+        setupEmailForAccountActivation($mail, $user->email_address, $user->fname, $user->hashed_user_id, $user->activation_code);
+        $mail->send();
     }
-    else {
-        echo $user->createCoachProfile();
-    }
-    
-    
 
     
     

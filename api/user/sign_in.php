@@ -6,6 +6,7 @@
     require_once '../../config/database.php';
     require_once '../../class/user.php';
 
+
     // allow all kinds of request
     header('Access-Control-Allow-Origin: *');
 
@@ -27,18 +28,12 @@
     // create a new user object
     $user = new User($db);
 
-    // get parameters from edit fan form and assign them to user object properties
-    $user->user_id = $requestBody->user_id;
-    $user->fname = $requestBody->fname;
-    $user->lname = $requestBody->lname;
-    $user->mobile_number = $requestBody->mobile_number;
-    $user->date_of_birth = $requestBody->date_of_birth;
-    $user->is_active = $requestBody->is_active;
-    $user->is_admin = $requestBody->is_admin;
-    $user->team_name = $requestBody->team_name;
+    // get email_address and user_password from request body
+    $user->email_address = $requestBody->email_address;
+    $user->user_password = $requestBody->user_password;
 
-    // edit user
-    echo $user->editFan();
+    // sign in user
+    echo $user->signIn();
     
 
     

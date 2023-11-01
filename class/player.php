@@ -8,7 +8,6 @@
         private $db_table = "Player";
         // Columns
         public $player_id;
-        public $user_id;
         public $fname;
         public $lname;
         public $height;
@@ -26,7 +25,6 @@
 
         
         // Helper tables
-        private $user_table = "AppUser";
         private $player_position_table = "PlayerPosition";
         private $goal_table = "Goal";
         private $game_table = "Game";
@@ -104,34 +102,7 @@
         }
 
      
-        /**
-         * This function checks if a player has a user account
-         */
-        public function hasUserAccount () {
-            // query to check if player has user account
-            $sqlQuery = "SELECT user_id
-            FROM ". $this->db_table. " 
-            WHERE player_id = :player_id";
-
-            // prepare data
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // bind data
-            $stmt->bindParam(':player_id', $this->player_id);
-
-            // execute query
-            $stmt->execute();
-
-            // get data
-            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // if data row is not empty
-            if ($dataRow != null){
-                return true;
-            }
-            // if no user account is found
-            return false;
-        }
+        
 
         // --- CREATE FUNCTIONS ---
 
@@ -424,134 +395,6 @@
         }
 
         /**
-         * This function gets all male players with user accounts
-         */
-        public function getMalePlayersWithUserAccounts() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
-            user_id IS NOT NULL
-            AND
-            gender = 'Male'";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            $stmt->execute();
-
-            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($dataRows) {
-                return json_encode($dataRows);
-            }
-            // if no player is found
-            return "";
-        }
-
-        /**
-         * This function gets all male players without user accounts
-         */
-        public function getMalePlayersWithoutUserAccounts() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
-            user_id IS NULL
-            AND 
-            gender = 'Male'";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            $stmt->execute();
-
-            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($dataRows) {
-                return json_encode($dataRows);
-            }
-            // if no player is found
-            return "";
-        }
-
-        /**
-         * This function gets all female players with user accounts
-         */
-        public function getFemalePlayersWithUserAccounts() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
-            user_id IS NOT NULL
-            AND
-            gender = 'Female'";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            $stmt->execute();
-
-            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($dataRows) {
-                return json_encode($dataRows);
-            }
-            // if no player is found
-            return "";
-        }
-
-        /**
-         * This function gets all female players without user accounts
-         */
-        public function getFemalePlayersWithoutUserAccounts() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
-            user_id IS NULL
-            AND 
-            gender = 'Female'";
-
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            $stmt->execute();
-
-            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($dataRows) {
-                return json_encode($dataRows);
-            }
-            // if no player is found
-            return "";
-        }
-
-
-        /**
-         * This function gets a player's user id. 
-         * If the player does not have a user account, it returns -1
-         */
-        public function getUserId() {
-            // query to get user id
-            $sqlQuery = "SELECT user_id
-            FROM ". $this->db_table. " 
-            WHERE player_id = :player_id";
-
-            // prepare data
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // bind data
-            $stmt->bindParam(':player_id', $this->player_id);
-
-            // execute query
-            $stmt->execute();
-
-            // get data
-            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // if data row is not empty
-            if ($dataRow){
-                $this->user_id = $dataRow['user_id'];
-                return $this->user_id;
-            }
-            // if no user account is found
-            return -1;
-        }
-
-        /**
         * This function gets the total number of games a player has played in.
         */
         public function getNumberOfGamesPlayedByPlayer() {
@@ -629,52 +472,6 @@
 
          // --- UPDATE FUNCTIONS ---        
 
-        /**
-         * This function updates a player's linked user account details to match their player profile
-         * After a player updates their profile, this function is called to update their linked user account
-         * details to match their player profile
-         * If the player does not have a user account, it returns -1
-         * This ensures data integrity
-         */
-        public function updateLinkedUserAccountDetails () {
-
-            if ($this->hasUserAccount()) {
-                $this->getUserId();
-
-                $sqlQuery = "UPDATE
-                        ". $this->user_table. "
-                        SET
-                        fname = :fname,
-                        lname = :lname,
-                        gender = :gender,
-                        date_of_birth = :date_of_birth
-                        WHERE
-                        user_id = :user_id";
-
-                $stmt = $this->conn->prepare($sqlQuery);
-
-                // sanitize
-                $this->fname=htmlspecialchars(strip_tags($this->fname));
-                $this->lname=htmlspecialchars(strip_tags($this->lname));
-                $this->gender=htmlspecialchars(strip_tags($this->gender));
-
-                // bind data
-                $stmt->bindParam(':fname', $this->fname);
-                $stmt->bindParam(':lname', $this->lname);
-                $stmt->bindParam(':gender', $this->gender);
-                $stmt->bindParam(':date_of_birth', $this->date_of_birth);
-                $stmt->bindParam(':user_id', $this->user_id);
-
-                // execute query
-                if ($stmt->execute()) {
-                    return true;
-                }
-                return false;
-            }
-            return -1;
-        }
-
-
        
         /**
          * This function updates a player's details.
@@ -721,13 +518,7 @@
             $stmt->bindParam(':year_group', $this->year_group);
             $stmt->bindParam(':is_retired', $this->is_retired);
             $stmt->bindParam(':player_id', $this->player_id);
-        
-            if($stmt->execute()){
-                $this->updateLinkedUserAccountDetails();
-                http_response_code(200);
-                return true;
-            } 
-            return false;
+  
         }
 
         /**

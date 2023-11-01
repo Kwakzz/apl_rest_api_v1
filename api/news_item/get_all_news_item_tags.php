@@ -4,24 +4,25 @@
     ini_set('display_errors', 1);
 
     require_once '../../config/database.php';
-    require_once '../../class/player.php';
+    require_once '../../class/news_item.php';
 
     // allow all kinds of request
     header('Access-Control-Allow-Origin: *');
 
-    // allow GET REQUESTS
-    header('Access-Control-Allow-Methods: GET');
-
     // content type
     header('Content-Type: application/json');
+
+    // allow GET REQUESTS
+    header('Access-Control-Allow-Methods: GET');
 
     $database = new Database();
     $db = $database->getConnection();
 
-    // create a new player object
-    $player = new Player($db);
+    // create a news item object
+    $news_item = new NewsItem($db);
 
-    echo $player->getFemalePlayersWithoutUserAccounts();
+
+    echo $news_item->getNewsItemTags();
 
     
 

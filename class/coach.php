@@ -8,7 +8,6 @@
         private $db_table = "Coach";
         // Columns
         public $coach_id;
-        public $user_id;
         public $fname;
         public $lname;
         public $is_retired;
@@ -22,7 +21,6 @@
 
         
         // Helper tables
-        private $user_table = "AppUser";
         private $team_table = "Team";
 
 
@@ -31,67 +29,6 @@
          */
         public function __construct($db){
             $this->conn = $db;
-        }
-
-        // HELPER FUNCTIONS
-        /**
-         * This function checks if a coach has a user account
-         */
-        public function hasUserAccount () {
-            // query to check if coach has user account
-            $sqlQuery = "SELECT user_id
-            FROM ". $this->db_table. " 
-            WHERE coach_id = :coach_id";
-
-            // prepare data
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // bind data
-            $stmt->bindParam(':coach_id', $this->coach_id);
-
-            // execute query
-            $stmt->execute();
-
-            // get data
-            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // if data row is not empty
-            if ($dataRow != null){
-                return true;
-            }
-            // if no user account is found
-            return false;
-        }
-
-        /**
-         * This function gets a coach's user id. 
-         * If the coach does not have a user account, it returns -1
-         */
-        public function getUserId() {
-            // query to get user id
-            $sqlQuery = "SELECT user_id
-            FROM ". $this->db_table. " 
-            WHERE coach_id = :coach_id";
-
-            // prepare data
-            $stmt = $this->conn->prepare($sqlQuery);
-
-            // bind data
-            $stmt->bindParam(':coach_id', $this->coach_id);
-
-            // execute query
-            $stmt->execute();
-
-            // get data
-            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // if data row is not empty
-            if ($dataRow){
-                $this->user_id = $dataRow['user_id'];
-                return $this->user_id;
-            }
-            // if no user account is found
-            return -1;
         }
 
 
@@ -218,51 +155,6 @@
         
         // UPDATE FUNCTIONS
 
-        /**
-         * This function updates a coach's linked user account details to match their coach profile
-         * After a coach updates their profile, this function is called to update their linked user account
-         * details to match their player profile
-         * If the coach does not have a user account, it returns -1
-         * This ensures data integrity
-         */
-        public function updateLinkedUserAccountDetails () {
-
-            if ($this->hasUserAccount()) {
-                $this->getUserId();
-
-                $sqlQuery = "UPDATE
-                        ". $this->user_table. "
-                        SET
-                        fname = :fname,
-                        lname = :lname,
-                        gender = :gender,
-                        date_of_birth = :date_of_birth
-                        WHERE
-                        user_id = :user_id";
-
-                $stmt = $this->conn->prepare($sqlQuery);
-
-                // sanitize
-                $this->fname=htmlspecialchars(strip_tags($this->fname));
-                $this->lname=htmlspecialchars(strip_tags($this->lname));
-                $this->gender=htmlspecialchars(strip_tags($this->gender));
-
-                // bind data
-                $stmt->bindParam(':fname', $this->fname);
-                $stmt->bindParam(':lname', $this->lname);
-                $stmt->bindParam(':gender', $this->gender);
-                $stmt->bindParam(':date_of_birth', $this->date_of_birth);
-                $stmt->bindParam(':user_id', $this->user_id);
-
-                // execute query
-                if ($stmt->execute()) {
-                    http_response_code(200);
-                    return true;
-                }
-                return false;
-            }
-            return -1;
-        }
 
         /**
          * This function updates a coach's details.
@@ -304,7 +196,6 @@
             $stmt->bindParam(':coach_id', $this->coach_id);
         
             if($stmt->execute()){
-                $this->updateLinkedUserAccountDetails();
                 http_response_code(200);
                 return true;
             } 

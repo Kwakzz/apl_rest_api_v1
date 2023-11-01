@@ -40,6 +40,7 @@
         /// It returns the cloudinary url of the uploaded image.
         /// It's for uploading the cover images of news items.
         public function newsCoverPicCloudinaryUpload ($coverPicTempPath, $cover_pic_name) {
+
             $cloudinary_upload = new UploadApi();
 
             $upload_options = array(
@@ -53,6 +54,7 @@
 
             // get cloudinary url
             return $cloudinary_upload['url'];
+            
         }
 
     }

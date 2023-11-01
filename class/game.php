@@ -145,9 +145,26 @@
          * This function gets the fixtures for a gameweek
          */
         public function getGameweekFixtures() {
-            $sqlQuery = "SELECT *,
+            $sqlQuery = "SELECT 
+            ".$this->db_table.".game_id,
+            ".$this->db_table.".start_time,
+            ".$this->db_table.".home_id,
+            ".$this->db_table.".away_id,
+            ".$this->db_table.".competition_id,
+            ".$this->db_table_competition.".competition_name,
+            ".$this->db_table_competition.".competition_abbrev,
+            ".$this->db_table_competition.".gender,
+            ".$this->db_table_gameweek.".gameweek_id,
+            ".$this->db_table_gameweek.".gameweek_number,
+            ".$this->db_table_gameweek.".gameweek_date,
+            ".$this->db_table_cupgame.".stage_id,
+            ".$this->db_table_stage.".stage_name,
              home_team.team_name AS home_team_name,
-             away_team.team_name AS away_team_name
+             home_team.team_name_abbrev AS home_team_name_abbrev,
+             home_team.team_logo_url AS home_team_logo_url,
+             away_team.team_name AS away_team_name,
+             away_team.team_name_abbrev AS away_team_name_abbrev,
+             away_team.team_logo_url AS away_team_logo_url
              FROM ". $this->db_table ."
              JOIN ". $this->db_table_competition ." ON ". $this->db_table. ".competition_id = ". $this->db_table_competition. ".competition_id
              JOIN ". $this->db_table_gameweek ." ON ". $this->db_table. ".gameweek_id = ". $this->db_table_gameweek. ".gameweek_id
