@@ -15,13 +15,10 @@
 
         // helper columns
         public $news_tag_id;
-        public $news_tag_name;
-
         // helper tables
         private $news_tag_table = "NewsTag";
 
         // helper variables
-        public $news_item_tag; 
         
         // constructor
         /**
@@ -34,7 +31,8 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function creates a news item
+         * This function creates a news item. It gives a 201 response code if successful.
+         * @return boolean true if news item is created, otherwise false.
          */
         public function createNewsItem() {
             $sqlQuery = "
@@ -45,7 +43,8 @@
                             subtitle,
                             content,
                             cover_pic,
-                            time_published
+                            time_published,
+                            news_tag_id
                         )
                         VALUES
                         (
@@ -53,7 +52,8 @@
                             :subtitle,
                             :content,
                             :cover_pic,
-                            :time_published
+                            :time_published,
+                            :news_tag_id
                         )";
             
             $stmt = $this->conn->prepare($sqlQuery);
@@ -67,6 +67,7 @@
             $stmt->bindParam(":content", $this->content);
             $stmt->bindParam(":cover_pic", $this->cover_pic);
             $stmt->bindParam(":time_published", $this->time_published);
+            $stmt->bindParam(":news_tag_id", $this->news_tag_id);
 
             if ($stmt->execute()) {
                 http_response_code(201);
@@ -80,11 +81,16 @@
 
         /**
          * This function gets a news item by id. It also gets the tags associated with the news item.
+         * @return string JSON encoded object containing the news item and its tag if found, otherwise an empty string.
          */
         public function getNewsItemById () {
             $sqlQuery = "SELECT *
                         FROM
                         ". $this->db_table ."
+                        JOIN
+                            ". $this->news_tag_table ."
+                        ON
+                            ". $this->db_table .".news_tag_id = ". $this->news_tag_table .".news_tag_id
                         WHERE 
                             ". $this->db_table .".news_item_id = :news_item_id
                         ";
@@ -102,16 +108,24 @@
                 // Encode the result as JSON
                 return json_encode($dataRow);
             }
+            // if no news item is found
+            return "";
+            
 
         }
 
         /**
-        * This function gets all news items and sorts them by time published
+        * This function gets all news items and sorts them by time published.
+        * @return string JSON encoded object containing all news items if found, otherwise an empty string.
         */ 
         public function getAllNewsItems () {
             $sqlQuery = "SELECT *
                         FROM
                         ". $this->db_table."
+                        JOIN
+                            ". $this->news_tag_table."
+                        ON
+                            ". $this->db_table.".news_tag_id = ". $this->news_tag_table.".news_tag_id
                         ORDER BY time_published DESC";
                 
             $stmt = $this->conn->prepare($sqlQuery);
@@ -130,6 +144,7 @@
 
         /**
          * This function gets all the news item tags.
+         * @return string JSON encoded object containing all news item tags if found, otherwise an empty string.
          */
         public function getNewsItemTags () {
             $sqlQuery = "SELECT *
@@ -155,7 +170,8 @@
             
         // --- UPDATE FUNCTIONS ---
         /**
-        * This function edits a news item
+        * This function edits a news item. It gives a 200 response code if successful.
+        * @return boolean true if news item is edited, otherwise false.
         */
         public function editNewsItem () {
             $sqlQuery = "UPDATE
@@ -164,7 +180,8 @@
                             title = :title,
                             subtitle = :subtitle,
                             content = :content,
-                            cover_pic = :cover_pic
+                            cover_pic = :cover_pic,
+                            news_tag_id = :news_tag_id
                         WHERE 
                             news_item_id = :news_item_id";
                 
@@ -176,6 +193,7 @@
             $stmt->bindParam(":content", $this->content);
             $stmt->bindParam(":cover_pic", $this->cover_pic);
             $stmt->bindParam(":news_item_id", $this->news_item_id);
+            $stmt->bindParam(":news_tag_id", $this->news_tag_id);
 
             if ($stmt->execute()) {
                 http_response_code(200);
@@ -186,7 +204,8 @@
 
         // --- DELETE FUNCTIONS ---
         /**
-         * This function deletes a news item
+         * This function deletes a news item. It gives a 204 response code if successful.
+         * @return boolean true if news item is deleted, otherwise false.
          */
         public function deleteNewsItem () {
             $sqlQuery = "DELETE FROM

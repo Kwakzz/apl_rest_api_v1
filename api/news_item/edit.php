@@ -33,6 +33,7 @@
     $news_item->content = $requestBody->content;
     $news_item->news_item_id = $requestBody->news_item_id;
     $news_item->cover_pic = $requestBody->cover_pic;
+    $news_item->news_tag_id = $requestBody->news_tag_id;
 
     // create news item
     echo $news_item->editNewsItem();

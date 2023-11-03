@@ -114,6 +114,7 @@
 
         /**
          * Check if a user exists in the database.
+         * @return bool true if user exists, false if user does not exist
          */
          public function checkIfUserExists(){
             $sqlQuery = "SELECT user_id
@@ -554,8 +555,7 @@
                         mobile_number,
                         is_active,
                         is_admin,
-                        ".$this->db_table.".team_id,
-                        player_id
+                        ".$this->db_table.".team_id
                       FROM
                         ". $this->db_table ."
                       WHERE 

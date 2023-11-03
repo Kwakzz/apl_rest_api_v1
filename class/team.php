@@ -148,7 +148,8 @@
 
 
         /**
-         * This function gets all teams
+         * This function gets all teams.
+         * @return string JSON encoded string of all teams if found, empty string otherwise.
          */
         public function getAllTeams () {
             $sqlQuery = "SELECT
