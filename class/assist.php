@@ -45,7 +45,8 @@
         // READ FUNCTIONS
 
         /**
-         * This function gets the assists from a game
+         * This function gets the assists from a game. Assists are associated with goals. 
+         * @return string json object containing all assists from a game if successful, otherwise empty string.
          */
          public function getAssistsFromGame () {
             // Query to get assists from a game
@@ -85,7 +86,8 @@
 
 
         /**
-         * Get top 10 goal scorers in a competition during a season
+         * Get top 10 top assist providers in a competition during a season.
+         * @return string json object containing top 10 assist providers in a competition during a season if successful, otherwise empty string.
          */
         public function getTop10AssistProvidersBySeasonAndCompetition () {
             $sqlQuery = "SELECT

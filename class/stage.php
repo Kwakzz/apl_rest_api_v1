@@ -19,7 +19,8 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * This function gets all stages
+         * This function gets all stages. Stages are the different rounds in a competition. Only cup competitions have stages.
+         * @return string json object containing all stages if successful, otherwise empty string.
          */
         public function getAllStages() {
             $sqlQuery = "SELECT *

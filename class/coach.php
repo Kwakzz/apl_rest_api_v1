@@ -34,9 +34,12 @@
 
         // CREATE FUNCTIONS
         /**
-         * This function adds a coach.
+         * This function adds a coach. It gives a 201 response code if successful.
+         * @uses getTeamId()
+         * @return boolean true if coach is added, otherwise false.
          */
          public function addCoach() {
+
             $this->getTeamId();
 
             // query to insert record
@@ -73,7 +76,8 @@
 
         // READ FUNCTIONS
         /**
-         * This function gets a player's team id using the team name
+         * This function gets a player's team id using the team name. It's a helper function.
+         * @return int team id if successful, otherwise -1.
          */
         public function getTeamId () {
             $sqlQuery = "SELECT
@@ -97,7 +101,8 @@
         }
 
         /**
-         * This function gets a coach's details
+         * This function gets a coach's details.
+         * @return string json object containing a coach's details if successful, otherwise empty string.
          */
         public function getCoach () {
             $sqlQuery = "SELECT 
@@ -131,6 +136,7 @@
 
         /**
          * This function gets all coaches.
+         * @return string json object containing all coaches if successful, otherwise empty string.
          */
         public function getCoaches() {
             $sqlQuery = "SELECT * 
@@ -157,7 +163,9 @@
 
 
         /**
-         * This function updates a coach's details.
+         * This function updates a coach's details. It gives a 200 response code if successful.
+         * @uses getTeamId()
+         * @return boolean true if coach is edited, otherwise false.
          */
         public function editCoach() {
 
@@ -205,7 +213,8 @@
         // DELETE FUNCTIONS
 
         /**
-         * This function deletes a player.
+         * This function deletes a player. It gives a 204 response code if successful.
+         * @return boolean true if player is deleted, otherwise false.
          */
         function deleteCoach() {
             $sqlQuery = "DELETE FROM " . 
