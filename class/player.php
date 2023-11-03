@@ -55,7 +55,8 @@
         // --- HELPER FUNCTIONS --- 
 
         /**
-         * This function gets a player's position id using the position name
+         * This function gets a player's position id using the position name.
+         * @return int position id if successful, otherwise -1.
          */
         public function getPositionId () {
             $sqlQuery = "SELECT
@@ -78,7 +79,8 @@
         }
 
         /**
-         * This function gets a player's team id using the team name
+         * This function gets a player's team id using the team name.
+         * @return int team id if successful, otherwise -1.
          */
         public function getTeamId () {
             $sqlQuery = "SELECT
@@ -107,7 +109,8 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function creates a player.
+         * This function creates a player. It is done by the admin. It gives a response code of 201 if successful.
+         * @return boolean true if successful, otherwise false.
          */
          public function addPlayer() {
             $this->getPositionId();
@@ -152,7 +155,8 @@
          // --- READ FUNCTIONS ---
 
          /**
-         * This function gets a player's details.
+         * This function gets a player's details. 
+         * @return string json object containing a player's details if successful, otherwise empty string.
          */
         public function getPlayer() {
             $sqlQuery = "SELECT 
@@ -190,6 +194,7 @@
 
         /**
          * This function gets all players.
+         * @return string json object containing all players if successful, otherwise empty string.
          */
         public function getPlayers() {
             $sqlQuery = "SELECT * 
@@ -210,7 +215,8 @@
         }
 
         /**
-         * This function gets all men's players.
+         * This function gets all men's players. Men's players are players whose gender column has the value "Male".
+         * @return string json object containing all male players if successful, otherwise empty string.
          */
         public function getMensPlayers() {
             $sqlQuery = "SELECT * 
@@ -232,7 +238,8 @@
         }
 
         /**
-         * This function gets all women's players.
+         * This function gets all women's players. Women's players are players whose gender column has the value "Female".
+         * @return string json object containing all female players if successful, otherwise empty string.
          */
         public function getWomensPlayers() {
             $sqlQuery = "SELECT * 
@@ -256,7 +263,8 @@
 
 
         /**
-         * This function gets all active men's players.
+         * This function gets all active men's players. Active men's players are players whose gender column has "Male" as its value and whose is_retired column has "0" as its value.
+         * @return string json object containing all active men's players if successful, otherwise empty string.
          */
         public function getActiveMensPlayers() {
             $sqlQuery = "SELECT * 
@@ -279,6 +287,10 @@
             return "";
         }
 
+        /**
+         * Active women's players are players whose gender column has "Female" as its value and whose is_retired column has "0" as its value.
+         * @return string json object containing all active women's players if successful, otherwise empty string.
+         */
         public function getActiveWomensPlayers() {
             $sqlQuery = "SELECT * 
             FROM ". $this->db_table. 
@@ -302,7 +314,8 @@
         }
 
         /**
-         * This function gets all retired players
+         * This function gets all retired players. Retired players are players whose is_retired column has "0" as its value.
+         * @return string json object containing all retired players if successful, otherwise empty string.
          */
         public function getRetiredPlayers() {
             $sqlQuery = "SELECT * 
@@ -324,7 +337,8 @@
         }
 
         /**
-         * This function gets retired men's players
+         * This function gets retired men's players. Retired men's players are players whose gender column has "Male" as its value and whose is_retired column has "1" as its value.
+         * @return string json object containing all retired men's players if successful, otherwise empty string.
          */
         public function getRetiredMensPlayers() {
             $sqlQuery = "SELECT * 
@@ -349,7 +363,8 @@
         }
 
         /**
-         * This function gets retired women's players
+         * This function gets retired women's players. Retired women's players are players whose gender column has "Female" as its value and whose is_retired column has "1" as its value.
+         * @return string json object containing all retired women's players if successful, otherwise empty string.
          */
         public function getRetiredWomensPlayers() {
             $sqlQuery = "SELECT * 
@@ -374,7 +389,8 @@
         }
 
         /**
-         * This function gets all active players
+         * This function gets all active players. Active players are players whose is_retired column has "0" as its value.
+         * @return string json object containing all active players if successful, otherwise empty string.
          */
         public function getActivePlayers() {
             $sqlQuery = "SELECT * 
@@ -395,7 +411,8 @@
         }
 
         /**
-        * This function gets the total number of games a player has played in.
+        * This function gets the total number of games a player has played in. It finds the games where the player was in the starting XI.
+        * @return string json object containing the total number of games a player has played in if successful, otherwise empty string.
         */
         public function getNumberOfGamesPlayedByPlayer() {
             $sqlQuery = "SELECT COUNT(*) AS no_of_games_played,
@@ -423,6 +440,7 @@
 
         /**
          * This function gets the number of times a player has won a game. It finds the games where the player was in the starting XI and the team scored more goals than the opposition.
+         * @return string json object containing the number of times a player has won a game if successful, otherwise empty string.
          */
         public function getPlayerTotalNumberOfWins() {
 
@@ -474,7 +492,8 @@
 
        
         /**
-         * This function updates a player's details.
+         * This function updates a player's details. It is done by the admin. It gives a response code of 200 if successful.
+         * @return boolean true if successful, otherwise false.
          */
         public function editPlayer() {
 
@@ -518,11 +537,20 @@
             $stmt->bindParam(':year_group', $this->year_group);
             $stmt->bindParam(':is_retired', $this->is_retired);
             $stmt->bindParam(':player_id', $this->player_id);
+
+            if ($stmt->execute()) {
+                http_response_code(200);
+                return true;
+            }
+            return false;
+        
+
   
         }
 
         /**
-         * This function changes a player's team.
+         * This function changes a player's team. It is done by the admin. It gives a response code of 200 if successful.
+         * @return boolean true if successful, otherwise false.
          */
         public function changeTeam() {
             $sqlQuery = "UPDATE 
@@ -542,13 +570,15 @@
             $stmt->bindParam(':player_id', $this->player_id);
         
             if($stmt->execute()){
+                http_response_code(200);
                 return true;
             } 
             return false;
         }
         
         /**
-         * This function deletes a player.
+         * This function deletes a player.  It is done by the admin. It gives a 204 response code if successful.
+         * @return boolean true if player is deleted, otherwise false.
          */
         function deletePlayer() {
             $sqlQuery = "DELETE FROM " . 
