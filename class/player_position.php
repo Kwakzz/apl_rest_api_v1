@@ -21,7 +21,8 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * This function gets all positions
+         * This function gets all positions.
+         * @return string json object containing all positions if successful, otherwise empty string.
          */
         public function getAllPositions() {
             $sqlQuery = "SELECT *
