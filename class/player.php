@@ -110,6 +110,8 @@
 
         /**
          * This function creates a player. It is done by the admin. It gives a response code of 201 if successful.
+         * @uses getPositionId(). Gets the position id of the player using the position name. The JSON request body contains the position name, and not the position id.
+         * @uses getTeamId(). Gets the team id of the player using the team name. The JSON request body contains the team name, and not the team id.
          * @return boolean true if successful, otherwise false.
          */
          public function addPlayer() {
@@ -493,6 +495,8 @@
        
         /**
          * This function updates a player's details. It is done by the admin. It gives a response code of 200 if successful.
+         * @uses getPositionId(). Gets the position id of the player using the position name. The JSON request body contains the position name, and not the position id.
+         * @uses getTeamId(). Gets the team id of the player using the team name. The JSON request body contains the team name, and not the team id.
          * @return boolean true if successful, otherwise false.
          */
         public function editPlayer() {
