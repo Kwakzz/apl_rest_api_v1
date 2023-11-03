@@ -28,7 +28,8 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function adds a starting XI to a game
+         * This function adds a starting XI to a game. It gives a 201 response code if successful.
+         * @return boolean true if starting XI is added, otherwise false.
          */
         public function addStartingXI () {
             $sqlQuery = "INSERT INTO
@@ -58,7 +59,8 @@
 
 
         /**
-         * This function adds a player to a starting XI
+         * This function adds a player to a starting XI. It gives a 201 response code if successful.
+         * @return boolean true if player is added, otherwise false.
          */
         public function addPlayerToStartingXI () {
             $sqlQuery = "INSERT INTO
@@ -93,7 +95,8 @@
 
 
         /**
-         * This function gets the starting XIs for a game
+         * This function gets the starting XIs for a game.
+         * @return string json object containing all starting XIs for a game if successful, otherwise empty string.
          */
         function getGameStartingXIs () {
             $sqlQuery = "SELECT
@@ -115,7 +118,8 @@
         }
 
         /**
-         * This function gets a team's starting XI for a particular game
+         * This function gets a team's starting XI for a particular game.
+         * @return string json object containing a team's starting XI for a particular game if successful, otherwise empty string.
          */
         function getTeamStartingXI () {
             $sqlQuery = "SELECT
@@ -141,7 +145,8 @@
         }
 
         /**
-         * This function gets a team's starting XI players for a particular game
+         * This function gets a team's starting XI players for a particular game.
+         * @return string json object containing a team's starting XI players for a particular game if successful, otherwise empty string.
          */
         function getTeamStartingXIPlayers () {
             $sqlQuery = "SELECT
@@ -177,7 +182,8 @@
         }
 
         /**
-         * This function gets the starting XIs for a game
+         * This function gets the starting XIs for a game.
+         * @return string json object containing all starting XIs for a game if successful, otherwise empty string.
          */
         function getGameStartingXIPlayers () {
             $sqlQuery = "SELECT
@@ -208,7 +214,8 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function removes a player from a starting XI
+         * This function removes a player from a starting XI. It gives a 204 response code if successful.
+         * @return boolean true if player is removed, otherwise false.
          */
         public function removePlayerFromStartingXI () {
             $sqlQuery = "DELETE FROM
@@ -232,7 +239,8 @@
         }
 
         /**
-         * This function deletes a starting XI
+         * This function deletes a starting XI. It gives a 204 response code if successful.
+         * @return boolean true if starting XI is deleted, otherwise false.
          */
         public function deleteStartingXI () {
             $sqlQuery = "DELETE FROM
