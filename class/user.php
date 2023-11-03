@@ -1091,7 +1091,7 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function deletes a user's account.
+         * This function deletes a user's account. It has a response code of 204.
          * This is done by the admin.
          * @return bool true if user is deleted, otherwise false.
          */
@@ -1103,6 +1103,7 @@
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->bindParam(1, $this->user_id);
             if($stmt->execute()){
+                http_response_code(204);
                 return true;
             }
             return false;

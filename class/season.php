@@ -31,7 +31,9 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function adds a season
+         * This function adds a season.
+         * It gives a 201 response code if successful.
+         * @return boolean true if season is added, otherwise false.
          */
         public function addSeason () {
             $sqlQuery = "INSERT INTO
@@ -60,8 +62,11 @@
         }
 
         /**
-         * This function adds a competition for a season.
+         * This function adds a competition for a season. It gives a 201 response code if successful.
+         * For example, the 2022/2023 season has the following competitions: Ashesi FA Cup. This makes Ashesi FA Cup a competition for the 2022/2023 season. This function adds Ashesi FA Cup as a competition for the 2022/2023 season.
          * It can be for men or women.
+         * @uses getCompetitionId()
+         * @return boolean true if competition is added to a season, otherwise false.
          */
         public function addSeasonCompetition () {
 
@@ -91,7 +96,8 @@
 
 
         /**
-         * This function gets all seasons in order of most recent to least recent
+         * This function gets all seasons in order of most recent to least recent.
+         * @return string json object containing all seasons if successful, otherwise empty string.
          */
         public function getSeasons () {
             $sqlQuery = "SELECT * FROM
@@ -111,7 +117,8 @@
         }
 
         /**
-         * This function gets the competitions that were played in a season
+         * This function gets the competitions that were played in a season.
+         * @return string json object containing all competitions played in a season if successful, otherwise empty string.
          */
         public function getSeasonCompetitions () {
             $sqlQuery = "SELECT                
@@ -135,7 +142,8 @@
         }
 
         /**
-         * This functions gets the men's competitions being played in a season
+         * This functions gets the men's competitions being played in a season.
+         * @return string json object containing all men's competitions played in a season if successful, otherwise empty string.
          */
         public function getMensSeasonCompetitions () {
             $sqlQuery = "SELECT *                
@@ -160,7 +168,8 @@
         }
 
         /**
-         * This functions gets the men's competitions being played in a season
+         * This functions gets the women's competitions being played in a season.
+         * @return string json object containing all women's competitions played in a season if successful, otherwise empty string.
          */
         public function getWomensSeasonCompetitions () {
             $sqlQuery = "SELECT *                
@@ -185,6 +194,10 @@
             return "";
         }
 
+        /**
+         * This function gets a competition's id by its name and gender. Competition names are duplicated for different genders.
+         * @return string json object containing the competition id if successful, otherwise empty string.
+         */
         private function getCompetitionId () {
             $sqlQuery = "SELECT competition_id FROM
                         ". $this->competition_table ."
@@ -222,7 +235,8 @@
         // --- UPDATE FUNCTIONS ---
         
         /**
-         * This function edits a season
+         * This function edits a season. It gives a 200 response code if successful.
+         * @return boolean true if season is edited, otherwise false.
          */
         public function editSeason () {
             $sqlQuery = "UPDATE
@@ -257,7 +271,8 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function deletes a competition from a season
+         * This function deletes a competition from a season. It gives a 204 response code if successful.
+         * @return boolean true if competition is deleted from a season, otherwise false.
          */
         public function deleteSeasonCompetition () {
             $sqlQuery = "DELETE FROM " . 
@@ -278,7 +293,8 @@
 
 
         /**
-         * This function deletes a season
+         * This function deletes a season. It gives a 204 response code if successful.
+         * @return boolean true if season is deleted, otherwise false.
          */
         public function deleteSeason () {
             $sqlQuery = "DELETE FROM " . 
