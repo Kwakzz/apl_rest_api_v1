@@ -29,7 +29,8 @@
 
         // --- CREATE FUNCTIONS ---
         /**
-         * This function adds a transfer
+         * This function adds a transfer. It gives a 201 response code if successful.
+         * @return boolean true if transfer is added, otherwise false.
          */
         public function addTransfer () {
             $sqlQuery = "
@@ -70,7 +71,8 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * This function gets a particular team
+         * This function gets a particular team. 
+         * @return string json object containing team if successful, otherwise empty string.
          */
         public function getAllTransfers() {
             $sqlQuery = "
@@ -109,7 +111,8 @@
         }
 
         /**
-         * This function gets all the transfers of a particular player
+         * This function gets all the transfers of a particular player.
+         * @return string json object containing all transfers of a player if successful, otherwise empty string.
          */
         public function getTransfersByPlayerId () {
             $sqlQuery = "
@@ -160,7 +163,8 @@
         }
 
         /**
-         * This function gets all the transfers of a particular team
+         * This function gets all the transfers of a particular team.
+         * @return string json object containing all transfers of a team if successful, otherwise empty string.
          */
         public function getTransfersByTeamId () {
             $sqlQuery = "
@@ -203,7 +207,8 @@
         }
 
         /**
-         * This function gets all transfers of type, "Loan"
+         * This function gets all transfers of type, "Loan".
+         * @return string json object containing all transfers of type, "Loan" if successful, otherwise empty string.
          */
         public function getLoans () {
             $sqlQuery = "
@@ -241,7 +246,8 @@
         }
 
         /**
-         * This function gets all transfers of type, "Permanent"
+         * This function gets all transfers of type, "Permanent".
+         * @return string json object containing all transfers of type, "Permanent" if successful, otherwise empty string.
          */
         public function getPermanents () {
             $sqlQuery = "
@@ -283,7 +289,8 @@
 
         // --- DELETE FUNCTIONS ---
         /**
-         * This function deletes a transfer
+         * This function deletes a transfer. It gives a 204 response code if successful.
+         * @return boolean true if transfer is deleted, otherwise false.
          */
         public function deleteTransfer () {
             $sqlQuery = "
