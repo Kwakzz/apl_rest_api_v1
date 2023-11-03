@@ -23,7 +23,8 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function adds a gameweek to a season
+         * This function adds a gameweek to a season. It gives a 201 response code if successful.
+         * @return boolean true if gameweek is added, otherwise false.
          */
         public function addGameweek () {
 
@@ -61,7 +62,8 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * Get gameweeks for season in order of most recent
+         * Get gameweeks for season in order of most recent. 
+         * @return string json object containing all gameweeks if successful, otherwise empty string.
          */
         public function getSeasonGameweeks () {
             $sqlQuery = "SELECT *
@@ -93,7 +95,8 @@
         // --- UPDATE FUNCTIONS ---
 
         /**
-         * This function edits a gameweek
+         * This function edits a gameweek. It gives a 200 response code if successful.
+         * @return boolean true if gameweek is edited, otherwise false.
          */
         public function editGameweek () {
             $sqlQuery = "UPDATE
@@ -127,7 +130,8 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function deletes a gameweek
+         * This function deletes a gameweek. It gives a 204 response code if successful.
+         * @return boolean true if gameweek is deleted, otherwise false.
          */
         public function deleteGameweek () {
             $sqlQuery = "DELETE FROM " 

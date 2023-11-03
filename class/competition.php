@@ -27,6 +27,7 @@
          * This function retrieves all competitions.
          * Competition names in the database are duplicated for each gender.
          * But this function only returns one of each competition name.
+         * @return string json object containing distinct competition names if successful, otherwise empty string.
          */
         public function getDistinctCompNames () {
             $sqlQuery = "
@@ -47,6 +48,7 @@
 
         /**
          * This function retrieves all competitions.
+         * @return string json object containing all competitions if successful, otherwise empty string.
          */
         public function getCompetitions () {
             $sqlQuery = "
@@ -66,7 +68,9 @@
         }
 
         /**
-         * This function gets men's competitions
+         * This function gets men's competitions. 
+         * Men's competitions are competitions whose "gender" column is equal to "Male."
+         * @return string json object containing all men's competitions if successful, otherwise empty string.
          */
         public function getMensCompetitions () {
             $sqlQuery = "
@@ -87,7 +91,9 @@
         }
 
         /**
-         * This function gets women's competitions
+         * This function gets women's competitions. 
+         * Women's competitions are competitions whose "gender" column is equal to "Female."
+         * @return string json object containing all women's competitions if successful, otherwise empty string.
          */
         public function getWomensCompetitions () {
             $sqlQuery = "
