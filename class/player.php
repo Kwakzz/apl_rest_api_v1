@@ -265,7 +265,7 @@
 
 
         /**
-         * This function gets all active men's players. Active men's players are players whose gender column has "Male" as its value and whose is_retired column has "0" as its value.
+         * This function gets all active men's players. Active men's players are players whose gender column has "Male" as its value and whose is_retired column has 0 as its value.
          * @return string json object containing all active men's players if successful, otherwise empty string.
          */
         public function getActiveMensPlayers() {
@@ -290,7 +290,7 @@
         }
 
         /**
-         * Active women's players are players whose gender column has "Female" as its value and whose is_retired column has "0" as its value.
+         * Active women's players are players whose gender column has "Female" as its value and whose is_retired column has 0 as its value.
          * @return string json object containing all active women's players if successful, otherwise empty string.
          */
         public function getActiveWomensPlayers() {
@@ -316,7 +316,7 @@
         }
 
         /**
-         * This function gets all retired players. Retired players are players whose is_retired column has "0" as its value.
+         * This function gets all retired players. Retired players are players whose is_retired column has 0 as its value.
          * @return string json object containing all retired players if successful, otherwise empty string.
          */
         public function getRetiredPlayers() {
@@ -339,7 +339,7 @@
         }
 
         /**
-         * This function gets retired men's players. Retired men's players are players whose gender column has "Male" as its value and whose is_retired column has "1" as its value.
+         * This function gets retired men's players. Retired men's players are players whose gender column has "Male" as its value and whose is_retired column has 1 as its value.
          * @return string json object containing all retired men's players if successful, otherwise empty string.
          */
         public function getRetiredMensPlayers() {
@@ -365,7 +365,7 @@
         }
 
         /**
-         * This function gets retired women's players. Retired women's players are players whose gender column has "Female" as its value and whose is_retired column has "1" as its value.
+         * This function gets retired women's players. Retired women's players are players whose gender column has "Female" as its value and whose is_retired column has 1 as its value.
          * @return string json object containing all retired women's players if successful, otherwise empty string.
          */
         public function getRetiredWomensPlayers() {
@@ -391,7 +391,7 @@
         }
 
         /**
-         * This function gets all active players. Active players are players whose is_retired column has "0" as its value.
+         * This function gets all active players. Active players are players whose is_retired column has 0 as its value.
          * @return string json object containing all active players if successful, otherwise empty string.
          */
         public function getActivePlayers() {
