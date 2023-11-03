@@ -54,7 +54,8 @@
         // --- HELPER FUNCTIONS ---
 
         /**
-         * This function gets a user's id
+         * This function gets a user's id. 
+         * @return int user id if user exists, otherwise -1.
          */
         private function getUserId(){
             $sqlQuery = "SELECT user_id
@@ -73,7 +74,8 @@
         }
 
         /**
-         * This function inserts a user's hashed id into the database. The hashed id is used for account activation. We don't want to expose the user's id in the activation link.
+         * This function inserts a user's hashed id into the database. The hashed id is used for account activation. It's not advisable to expose the user's id in the activation link.
+         * @return bool true if user id is inserted, otherwise false.
          */
         private function insertHashedUserId(){
             $sqlQuery = "UPDATE
@@ -93,7 +95,8 @@
         }
 
         /**
-         * This function checks if a user has a hashed id
+         * This function checks if a user has a hashed id. It's used to check if a user has already signed up.
+         * @return bool true if user has hashed id, otherwise false.
          */
         private function checkIfUserHasHashedId(){
             $sqlQuery = "SELECT hashed_user_id
@@ -131,7 +134,8 @@
          }
 
          /**
-          * This function gets a user's email address using their hashed id
+          * This function gets a user's email address using their hashed id. 
+          * @return string user's email address if user exists, otherwise an empty string.
           */
         private function getEmailAddressByHashedId(){
             $sqlQuery = "SELECT email_address
@@ -150,7 +154,8 @@
         }
 
         /**
-         * This function gets a user's first name using their email address
+         * This function gets a user's first name using their email address.
+         * @return string user's first name if user exists, otherwise an empty string.
          */
         private function getFirstNameByEmail(){
             $sqlQuery = "SELECT fname
@@ -172,6 +177,7 @@
 
          /**
           * This function generates an expiry date for the activation code. It is generated when the user signs up and expires after 24 hours. 
+          * @return string activation code expiry date
           */
         private function generateActivationExpiry(){
             $date = new DateTime();
@@ -181,6 +187,7 @@
 
         /**
          * This function generates an expiry date for the password reset token. It is generated when the user requests a password reset and expires after 1 hour. 
+         * @return string password reset token expiry date
          */
         private function generatePasswordResetExpiry(){
             $date = new DateTime();
@@ -190,6 +197,7 @@
 
         /**
          * This function gets the activation code's expiry time. It is used to check if the activation code has expired.
+         * @return string activation code expiry time
          */
         private function getActivationExpiryTime(){
             $sqlQuery = "SELECT
@@ -213,7 +221,8 @@
         }
 
         /**
-         * This function sets the user's activation status to true. It is called when a user clicks on the activation link and the activation code is correct and has not expired.
+         * This function sets the user's activation status to true. In other words, it sets is_active to 1. It is called when a user clicks on the activation link and the activation code is correct and has not expired.
+         * @return bool true if activation status is set, otherwise false.
          */
         private function setActivationStatus(){
             $sqlQuery = "UPDATE
@@ -234,6 +243,7 @@
          
         /**
          * This function activates a user's account. It checks if the activation code is correct and if it has expired. If the activation code is correct and has not expired, the user's account is activated. If the activation code is incorrect, the user's account is deleted. If the activation code has expired, the user's account is deleted.
+         * @return string message indicating if the account has been activated, if the activation code has expired, or if the activation code is incorrect.
          */
         public function activateAccount () {
 
@@ -261,7 +271,8 @@
         }   
 
         /**
-         * This function compares the activation code sent to the user with the one in the database
+         * This function compares the activation code sent to the user with the one in the database.
+         * @return bool true if activation code is correct, otherwise false.
          */
         private function checkActivationCode($activation_code){
             $sqlQuery = "SELECT
@@ -289,7 +300,8 @@
         }
 
         /**
-         * This function checks a user's activation status
+         * This function checks a user's activation status. 
+         * @return bool true if user is active, otherwise false. If user is active, is_active is set to 1. If user is not active, is_active is set to 0.
          */
         private function checkActivationStatus(){
             $sqlQuery = "SELECT
@@ -319,6 +331,7 @@
 
         /**
          * This function gets the password reset token's expiry time. It is used to check if the password reset token has expired.
+         * @return string password reset token expiry time
          */
         private function getPasswordResetExpiryTime(){
             $sqlQuery = "SELECT
@@ -345,7 +358,8 @@
         }
 
         /**
-         * This function compares the password reset token sent to the user with the one in the database
+         * This function compares the password reset token sent to the user with the one in the database.
+         * @return bool true if password reset token is correct, otherwise false.
          */
         private function checkPasswordResetToken($password_reset_token){
             $sqlQuery = "SELECT
@@ -376,7 +390,11 @@
 
         /**
          * This function checks if the user has an existing valid password token. It's called in another function to prevent users from requesting multiple password reset tokens.
+         * @todo implement this function
          */
+        private function checkIfUserHasValidPasswordToken(){
+        }
+
 
         /**
          * This function calls on generateActivationCode() in email_auth.php to generate a password reset token. 
@@ -384,6 +402,12 @@
          * This function is called when the user sends a request (containing their email address as a JSON) by clicking on the "Password Reset" button. 
          * It also checks if the user has a hashed id. If the user doesn't have one, it creates one. This hashed id and the reset token are attached to the password reset link sent to the user's email address. 
          * Finally, this function checks if a user is active. If the user is active, it sends the password reset link to the user's email address. If the user is not active, it responds with a code 401 and returns false.
+         * @uses checkIfUserHasHashedId(). Checks if a user has a hashed id.
+         * @uses insertHashedUserId(). Inserts a user's hashed id into the database. Hashed id is used for account activation.
+         * @uses getFirstNameByEmail(). Gets a user's first name using their email address.
+         * @uses checkActivationStatus(). Checks if a user is active.
+         * @return bool true if password reset details are inserted into the database, otherwise false.
+         * @todo implement checkIfUserHasValidPasswordToken() function
          */
         public function insertPasswordResetDetailsIntoDb () {
 
@@ -439,6 +463,10 @@
 
         /**
          * This function resets a user's password. It checks if the password reset token is correct and if it has expired. If the password reset token is correct and has not expired, the user's password is reset. If the password reset token is incorrect, the user isn't allowed to reset their password. If the password reset token has expired, the user isn't allowed to reset their password.
+         * @uses checkPasswordResetToken(). Checks if the password reset token is correct.
+         * @uses getPasswordResetExpiryTime(). Gets the password reset token's expiry time.
+         * @uses setPassword(). Sets the user's password.
+         * @return string message indicating if the password has been reset, if the password reset token has expired, or if the password reset token is incorrect.
          */
         public function resetPassword () {
 
@@ -467,7 +495,14 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function enables a user to sign up
+         * This function enables a user to sign up.
+         * @uses checkInactiveUsers(). Checks if there are inactive users during the sign up process.
+         * @uses deleteInactiveUsers(). If there are inactive users, they are deleted.
+         * @uses generateActivationExpiry(). Generates an expiry date for the activation code.
+         * @uses checkIfUserExists(). Checks if a user already exists in the database.
+         * @uses getUserId(). Gets a user's id. Uses the user id to generate a hashed id.
+         * @uses insertHashedUserId(). Inserts a user's hashed id into the database. Hashed id is used for account activation.
+         * @return boolean true if user is signed up, otherwise false.
          */
         public function signUp(){
 
@@ -534,7 +569,11 @@
 
 
         /**
-         * This function enables a user to sign in
+         * This function enables a user to sign in.
+         * @uses checkInactiveUsers(). Checks if there are inactive users during the sign in process.
+         * @uses deleteInactiveUsers(). If there are inactive users, they are deleted.
+         * @uses updateLoginTime(). Updates the user's last login time.
+         * @return string user details if user is signed in, otherwise an empty string.
          */
         public function signIn(){
 
@@ -586,7 +625,8 @@
         }
 
          /**
-         *  This function checks if there are inactive users whose activation links have expired
+         *  This function checks if there are inactive users whose activation links have expired.
+         * @return bool true if there are inactive users, otherwise false.
         */
         public function checkInactiveUsers(){
             $sqlQuery = "SELECT * 
@@ -607,7 +647,8 @@
         }    
 
         /**
-         * This function gets a team's id using the team name
+         * This function gets a team's id using the team name.
+         * @return int team id if team exists, otherwise -1.
          */
         private function getTeamId(){
             $sqlQuery = "SELECT
@@ -631,7 +672,8 @@
 
 
         /**
-         * This function checks returns a player with a given first and last name from the user table
+         * This function checks returns a player with a given first and last name from the user table.
+         * @return string player details if player exists, otherwise an empty string.
          */
         public function getUserByName() {
             $sqlQuery = "SELECT
@@ -670,10 +712,12 @@
         // --- UPDATE FUNCTIONS ---
 
          /**
-         * This function allows a user to set their team id
-         * After the user signs up, they can pick a team
-         * The email address is sent to the page where the user picks a team
-         * So, the parameters for the query are the email address and the team name
+         * This function allows a user to set their team id.
+         * After the user signs up, they can pick a team.
+         * The email address is sent to the page where the user picks a team.
+         * So, the parameters for the query are the email address and the team name.
+         * @uses getTeamId(). Gets a team's id using the team name.
+         * @return bool true if team id is set, otherwise false.
          */
         public function setUserTeamId(){
 
@@ -708,6 +752,7 @@
         /**
          * This function allows the user to change their phone number.
          * Other details cannot be changed.
+         * @return bool true if mobile number is changed, otherwise false.
          */
         public function changeMobileNumber(){
             $sqlQuery = "UPDATE
@@ -732,7 +777,8 @@
         }
 
         /**
-         * This function updates a user's password
+         * This function updates a user's password.
+         * @return bool true if password is changed, otherwise false.
          */
         public function setPassword(){
             $sqlQuery = "UPDATE
@@ -763,7 +809,8 @@
         }
 
         /**
-         * This function updates a user's login time
+         * This function updates a user's login time. It is called when a user signs in.
+         * @return bool true if login time is updated, otherwise false.
          */
         private function updateLoginTime () {
             $sqlQuery = "UPDATE
@@ -783,7 +830,8 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function allows a user to delete their account using their id
+         * This function delete a user's account using their id.
+         * @return bool true if user is deleted, otherwise false.
          */
         public function deleteUserById(){
             $sqlQuery = "DELETE FROM " . 
@@ -799,7 +847,8 @@
         }
 
         /**
-         * This function allows a user to delete their account using their hashed id
+         * This function deletes a user's account using their hashed id.
+         * @return bool true if user is deleted, otherwise false.
          */
         public function deleteUserByHashedId(){
             $sqlQuery = "DELETE FROM " . 
@@ -819,9 +868,10 @@
        
 
         /**
-         * This function deletes the accounts of inactive users whose activation links have expired
-         * It runs whenever a user tries to log in or sign up
-         * However, it only deletes the accounts of users who have not created a player or coach profile
+         * This function deletes the accounts of inactive users whose activation links have expired.
+         * It runs whenever a user tries to log in or sign up. 
+         * This is to prevent the database from getting filled with inactive users.
+         * @return bool true if inactive users are deleted, otherwise false.
          */
         public function deleteInactiveUsers() {
             $sqlQuery = "DELETE FROM " .
@@ -844,7 +894,16 @@
         
         /**
          * This function adds a new user to the database.
-         * This done by the admin.
+         * This done by the admin. 
+         * It's similar to the signUp() function. The only difference is that the admin can set the user's team id and admin status.
+         * @uses checkInactiveUsers(). Checks if there are inactive users during the sign up process.
+         * @uses deleteInactiveUsers(). If there are inactive users, they are deleted.
+         * @uses generateActivationExpiry(). Generates an expiry date for the activation code.
+         * @uses checkIfUserExists(). Checks if a user already exists in the database.
+         * @uses getUserId(). Gets a user's id. Uses the user id to generate a hashed id.
+         * @uses insertHashedUserId(). Inserts a user's hashed id into the database. Hashed id is used for account activation.
+         * @uses getTeamId(). Gets a team's id using the team name.
+         * @return boolean true if user is added, otherwise false.
          */
         public function addUser(){
 
@@ -915,6 +974,7 @@
         /**
          * This function gets all regular users from the database. 
          * Regular users don't have admin status.
+         * @return string all regular users if they exist, otherwise false.
          */
         public function getAllRegularUsers() {
             $sqlQuery ="SELECT *
@@ -955,6 +1015,8 @@
         /**
          * This function edits a user's details.
          * This is done by the admin.
+         * @uses getTeamId(). Gets a team's id using the team name.
+         * @return bool true if user is edited, otherwise false.
          */
         public function editUser () {
 
@@ -1000,7 +1062,9 @@
         
 
         /**
-         * This function activates or deactivates a user's account
+         * This function activates or deactivates a user's account.
+         * This is done by the admin.
+         * @return bool true if user is activated or deactivated, otherwise false.
          */
         public function activateOrDeactivateUser() {
 
@@ -1027,7 +1091,9 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function deletes a user's account
+         * This function deletes a user's account.
+         * This is done by the admin.
+         * @return bool true if user is deleted, otherwise false.
          */
         public function deleteUser() {
 
@@ -1041,16 +1107,6 @@
             }
             return false;
         }
-
-
-        
-
-        
-
-
-
-        
-
 
 
     }
