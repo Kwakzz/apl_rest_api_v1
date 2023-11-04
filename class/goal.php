@@ -44,6 +44,7 @@
          * This is a helper function for the addGoalAndAssist function.
          * It adds an assist to the Assist table.
          * This assist references the goal.
+         * @return boolean true if assist is added, otherwise false.
          */
         public function addAssist() {
             // Query to insert a cup game into the database
@@ -65,7 +66,9 @@
         }
 
         /**
-         * This function adds a goal to the Goal table
+         * This function adds a goal to the Goal table.
+         * This function is called when the assist provider id is not set.
+         * @return boolean true if goal is added, otherwise false.
          */
         public function addGoal () {
             $sqlQuery = "INSERT INTO
@@ -105,6 +108,9 @@
         /**
          * This function adds a goal and an assist to the Goal and Assist tables respectively.
          * This function is called when the assist provider id is set.
+         * It has a response code of 201 if successful.
+         * @uses addAssist(). This function is called to add an assist to the Assist table. The assist references the goal.
+         * @return boolean true if goal and assist are added, otherwise false.
          */
         public function addGoalAndAssist () {
             $sqlQuery = "INSERT INTO
@@ -149,7 +155,8 @@
 
         
         /**
-         * This function gets all goals scored in a game
+         * This function gets all goals scored in a game.
+         * @return string json object containing all goals scored in a game if successful, otherwise empty string.
          */
         public function getGoalsByGame () {
             $sqlQuery = "SELECT
@@ -186,7 +193,8 @@
         }
 
         /**
-         * This function gets goals scored by a team in a game
+         * This function gets goals scored by a team in a game.
+         * @return string json object containing all goals scored by a team in a game if successful, otherwise empty string.
          */
         public function getGoalsByTeamAndGame () {
             $sqlQuery = "SELECT
@@ -226,7 +234,9 @@
         }
 
         /**
-         * This function gets the goals scored by a player in a season
+         * This function gets the goals scored by a player in a season.
+         * For example, the number of goals scored by Daniel in the 2023 Fall Season.
+         * @return string json object containing all goals scored by a player in a season if successful, otherwise empty string.
          */
         public function getGoalsByPlayerAndSeason () {
             $sqlQuery = "SELECT
@@ -270,6 +280,7 @@
         /**
          * This functions gets the goals scored by a player in a competition during a season.
          * For example, the number of goals scored by Daniel in the Premier League during the 2023 Fall Season.
+         * @return string json object containing all goals scored by a player in a competition during a season if successful, otherwise empty string.
          */
         public function getGoalsByPlayerAndCompetitionAndSeason () {
             $sqlQuery = "SELECT
@@ -317,6 +328,7 @@
 
         /**
          * Get the total number of goals scored by a player since the start of records.
+         * @return string json object containing the total number of goals scored by a player since the start of records if successful, otherwise empty string.
          */
         public function getTotalGoalsByPlayer () {
             $sqlQuery = "SELECT
@@ -353,6 +365,7 @@
         /**
          * This function gets the goals scored in a competition during a season
          * For example, the number of goals scored in the Premier League during the 2023 Fall Season.
+         * @return string json object containing all goals scored in a competition during a season if successful, otherwise empty string.
          */
         public function getGoalsByCompetitionAndSeason () {
             $sqlQuery = "SELECT
@@ -401,6 +414,7 @@
         /**
          * Get top 10 goal scorers in a competition during a season.
          * For example, the top 10 goal scorers in the Premier League during the 2023 Fall Season.
+         * @return string json object containing top 10 goal scorers in a competition during a season if successful, otherwise empty string.
          */
         public function getTop10GoalScorersBySeasonAndCompetition () {
             $sqlQuery = "SELECT
@@ -451,6 +465,7 @@
          * For example, the top 10 goal scorers in the 2023 Fall Season.
          * It includes goals scored in all competitions.
          * It also includes both men and women.
+         * @return string json object containing top 10 goal scorers in a season if successful, otherwise empty string.
          */
         public function getTop10GoalScorersBySeason () {
             $sqlQuery = "SELECT
@@ -493,88 +508,88 @@
 
         /**
          * This function returns the list of teams who have kept the most clean sheets in a season competition.
-         * We're looking for games where the opponent did not score. We're looking for games in a particular competition and season. So the season and competition are parameters. We join the goal table. We find the cases where a team was the home team and the opponent did not score. We also find the cases where a team was the away team and the opponent did not score. We group by the team id. We order by the number of clean sheets in descending order. We don't to limit the results. 
-         */
+         * We're looking for games where the opponent did not score. We're looking for games in a particular competition and season. So the season and competition are parameters. We join the goal table. We find the cases where a team was the home team and the opponent did not score. We also find the cases where a team was the away team and the opponent did not score. We group by the team id. We order by the number of clean sheets in descending order. 
+         * @return string json object containing the list of teams who have kept the most clean sheets in a season competition if successful, otherwise empty string.
+         */     
+        public function getTop10CleanSheetsBySeasonAndCompetition() {
 
-        
-    public function getTop10CleanSheetsBySeasonAndCompetition() {
-
-        $sqlQuery = "
-        (
-            SELECT
-            COUNT(*) as no_of_clean_sheets,
-            ".$this->team_table.".team_name,
-            ".$this->team_table.".team_name_abbrev,
-            ".$this->team_table.".team_logo_url
-            FROM 
-            ".$this->game_table."
-            JOIN ".$this->gameweek_table." ON ".$this->game_table.".gameweek_id = ".$this->gameweek_table.".gameweek_id
-            JOIN ".$this->season_table." ON ".$this->gameweek_table.".season_id = ".$this->season_table.".season_id
-            JOIN ".$this->team_table." ON ".$this->game_table.".home_id = ".$this->team_table.".team_id
-            WHERE
+            $sqlQuery = "
             (
-                SELECT COUNT(*) 
-                FROM " . $this->db_table . "
-                WHERE team_id = away_id
-                AND game_id = " . $this->game_table . ".game_id
-            ) = 0
-            AND
-            ".$this->game_table.".competition_id = :competition_id
-            AND
-            ".$this->season_table.".season_id = :season_id
-            AND
-            ".$this->gameweek_table.".gameweek_date < CURDATE()
-            GROUP BY ".$this->team_table.".team_id
-            ORDER BY no_of_clean_sheets DESC
-        )
-        UNION 
-        (
-            SELECT
-            COUNT(*) as no_of_clean_sheets,
-            ".$this->team_table.".team_name,
-            ".$this->team_table.".team_name_abbrev,
-            ".$this->team_table.".team_logo_url
-            FROM 
-            ".$this->game_table."
-            JOIN ".$this->gameweek_table." ON ".$this->game_table.".gameweek_id = ".$this->gameweek_table.".gameweek_id
-            JOIN ".$this->season_table." ON ".$this->gameweek_table.".season_id = ".$this->season_table.".season_id
-            JOIN ".$this->team_table." ON ".$this->game_table.".away_id = ".$this->team_table.".team_id
-            WHERE
+                SELECT
+                COUNT(*) as no_of_clean_sheets,
+                ".$this->team_table.".team_name,
+                ".$this->team_table.".team_name_abbrev,
+                ".$this->team_table.".team_logo_url
+                FROM 
+                ".$this->game_table."
+                JOIN ".$this->gameweek_table." ON ".$this->game_table.".gameweek_id = ".$this->gameweek_table.".gameweek_id
+                JOIN ".$this->season_table." ON ".$this->gameweek_table.".season_id = ".$this->season_table.".season_id
+                JOIN ".$this->team_table." ON ".$this->game_table.".home_id = ".$this->team_table.".team_id
+                WHERE
+                (
+                    SELECT COUNT(*) 
+                    FROM " . $this->db_table . "
+                    WHERE team_id = away_id
+                    AND game_id = " . $this->game_table . ".game_id
+                ) = 0
+                AND
+                ".$this->game_table.".competition_id = :competition_id
+                AND
+                ".$this->season_table.".season_id = :season_id
+                AND
+                ".$this->gameweek_table.".gameweek_date < CURDATE()
+                GROUP BY ".$this->team_table.".team_id
+                ORDER BY no_of_clean_sheets DESC
+            )
+            UNION 
             (
-                SELECT COUNT(*) 
-                FROM " . $this->db_table . "
-                WHERE team_id = home_id
-                AND game_id = " . $this->game_table . ".game_id
-            ) = 0
-            AND
-            ".$this->game_table.".competition_id = :competition_id
-            AND
-            ".$this->season_table.".season_id = :season_id
-            AND
-            ".$this->gameweek_table.".gameweek_date < CURDATE()
-            GROUP BY ".$this->team_table.".team_id
-            ORDER BY no_of_clean_sheets DESC
-        )";
+                SELECT
+                COUNT(*) as no_of_clean_sheets,
+                ".$this->team_table.".team_name,
+                ".$this->team_table.".team_name_abbrev,
+                ".$this->team_table.".team_logo_url
+                FROM 
+                ".$this->game_table."
+                JOIN ".$this->gameweek_table." ON ".$this->game_table.".gameweek_id = ".$this->gameweek_table.".gameweek_id
+                JOIN ".$this->season_table." ON ".$this->gameweek_table.".season_id = ".$this->season_table.".season_id
+                JOIN ".$this->team_table." ON ".$this->game_table.".away_id = ".$this->team_table.".team_id
+                WHERE
+                (
+                    SELECT COUNT(*) 
+                    FROM " . $this->db_table . "
+                    WHERE team_id = home_id
+                    AND game_id = " . $this->game_table . ".game_id
+                ) = 0
+                AND
+                ".$this->game_table.".competition_id = :competition_id
+                AND
+                ".$this->season_table.".season_id = :season_id
+                AND
+                ".$this->gameweek_table.".gameweek_date < CURDATE()
+                GROUP BY ".$this->team_table.".team_id
+                ORDER BY no_of_clean_sheets DESC
+            )";
 
-        $stmt = $this->conn->prepare($sqlQuery);
+            $stmt = $this->conn->prepare($sqlQuery);
 
-        $stmt->bindParam(":season_id", $this->season_id);
-        $stmt->bindParam(":competition_id", $this->competition_id);
+            $stmt->bindParam(":season_id", $this->season_id);
+            $stmt->bindParam(":competition_id", $this->competition_id);
 
-        $stmt->execute();
+            $stmt->execute();
 
-        $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($dataRows) {
-            return json_encode($dataRows);
+            if ($dataRows) {
+                return json_encode($dataRows);
+            }
+
+            return "";
         }
-
-        return "";
-    }
 
 
         /**
-         * Get all goals scored by a team
+         * Get all goals scored by a team.
+         * @return string json object containing the number of goals scored by a team, the team name and team name's abbreviation, if successful, otherwise empty string.
          */
         public function getTotalGoalsByTeam () {
             $sqlQuery = "SELECT ".
@@ -602,6 +617,10 @@
 
         }
 
+        /**
+         * This function gets the total number of goals scored by a men's team. It finds the number of goals scored by a team in all competitions whose gender value is "Male."
+         * @return string json object containing the number of goals scored by a team, the team name and team name's abbreviation, if successful, otherwise empty string.
+         */
         public function getTotalGoalsByMensTeam () {
             $sqlQuery = "SELECT ".
                             $this->team_table.".team_name,".
@@ -632,7 +651,11 @@
             return "";
         }
 
-          public function getTotalGoalsByWomensTeam () {
+        /**
+         * This function gets the total number of goals scored by a women's team. It finds the number of goals scored by a team in all competitions whose gender value is "Female."
+         * @return string json object containing the number of goals scored by a team, the team name and team name's abbreviation, if successful, otherwise empty string.
+         */
+        public function getTotalGoalsByWomensTeam () {
             $sqlQuery = "SELECT ".
                             $this->team_table.".team_name,".
                             $this->team_table.".team_name_abbrev,
@@ -662,7 +685,8 @@
         }
 
         /**
-         * Get all the goals conceded by a team
+         * Get all the goals conceded by a team. These areq goals scored by the opponent. So you search games where the team was the home team and the opponent scored. You also search games where the team was the away team and the opponent scored.
+         * @return string json object containing the number of goals conceded by a team, the team name and team name's abbreviation, if successful, otherwise empty string.
          */
         public function getTotalGoalsConcededByTeam () {
             $sqlQuery = "SELECT
@@ -693,6 +717,7 @@
          * Get all the goals conceded by the men's team.
          * For example, Elite has a men's and women's team.
          * If the team_id is say 23020, the function will return the number of goals conceded by the Elite men's team since the beginning of records.
+         * @return string json object containing the number of goals conceded by a team, the team name and team name's abbreviation, if successful, otherwise empty string.
          */
         public function getTotalGoalsConcededByMensTeam () {
             $sqlQuery = "SELECT
@@ -726,6 +751,7 @@
          * Get all the goals conceded by the men's team.
          * For example, Elite has a men's and women's team.
          * If the team_id is say 23020, the function will return the number of goals conceded by the Elite women's team since the beginning of records.
+         * @return string json object containing the number of goals conceded by a team, the team name and team name's abbreviation, if successful, otherwise empty string.
          */
         public function getTotalGoalsConcededByWomensTeam () {
             $sqlQuery = "SELECT
@@ -756,7 +782,9 @@
         }
 
         /**
-         * Get all goals scored by a team in a competition in a season
+         * Get all goals scored by a team in a competition in a season.
+         * For example, the number of goals scored by Elite in the Premier League during the 2023 Fall Season.
+         * @return string json object containing all goals scored by a team in a competition in a season if successful, otherwise empty string.
          */
         public function getTotalGoalsByTeamInSeasonCompetition() {
             $sqlQuery = "SELECT
@@ -806,7 +834,9 @@
         
 
         /**
-         * Get all goals scored by a team in a season
+         * Get all goals scored by a team in a season. 
+         * For example, the number of goals scored by Elite in the 2023 Fall Season.
+         * @return string json object containing all goals scored by a team in a season if successful, otherwise empty string.
          */
         public function getTotalGoalsByTeamAndSeason () {
             $sqlQuery = "SELECT
@@ -852,8 +882,8 @@
     * It finds the count of all games the team played in where the number of goals scored by the team is greater than the number of goals scored by the opposing team.
     * Find count of games where home_id = :team_id and the count of the home team's goals is greater than the count of the away team's goals, or
     * find count of games where away_id = :team_id and the count of the away team's goals is greater than the count of the home team's goals
+    * @return string JSON object containing the number of wins a team has had in history if successful, otherwise empty string.
     */
-
 
     public function getTeamTotalNumberOfWins() {
        $sqlQuery = "
@@ -901,7 +931,10 @@
     }
 
     /**
-     * Get total number of wins by men's team. Same logic as no of wins by team
+     * Get total number of wins by a men's team. 
+     * @see getTeamTotalNumberOfWins(). It shows the logic of this function.
+     * @return string JSON object containing the number of wins a men's team has had in history if successful, otherwise empty string.
+     * @see getMensTeam(). getMensTeam() is in team.php. It tells what a men's team is.
      */
     public function getMensTeamTotalNumberOfWins() {
        $sqlQuery = "
@@ -962,7 +995,10 @@
     }
 
      /**
-     * Get total number of wins by women's team. Same logic as no of wins by team
+     * Get total number of wins by a women's team. 
+     * @see getTeamTotalNumberOfWins(). It shows the logic of this function.
+     * @return string JSON object containing the number of wins a women's team has had in history if successful, otherwise empty string.
+     * @see getWomensTeam(). getWomensTeam() is in team.php. It tells what a women's team is.
      */
     public function getWomensTeamTotalNumberOfWins() {
        $sqlQuery = "
@@ -1024,7 +1060,10 @@
 
 
     /**
-     * Get total number of losses by men's team. Same logic as no of wins by team
+     * Get total number of losses by a men's team. 
+     * @see getTeamTotalNumberOfWins(). It shows the logic of this function.
+     * @return string JSON object containing the number of losses a men's team has had in history if successful, otherwise empty string.
+     * @see getMensTeam(). getMensTeam() is in team.php. It tells what a men's team is.
      */
     public function getMensTeamTotalNumberOfLosses() {
        $sqlQuery = "
@@ -1086,7 +1125,10 @@
 
 
      /**
-     * Get total number of losses by women's team. Same logic as no of wins by team
+     * Get total number of losses by a women's team. 
+     * @see getTeamTotalNumberOfWins(). It shows the logic of this function.
+     * @return string JSON object containing the number of losses a women's team has had in history if successful, otherwise empty string.
+     * @see getWomensTeam(). getWomensTeam() is in team.php. It tells what a women's team is.
      */
     public function getWomensTeamTotalNumberOfLosses() {
        $sqlQuery = "
@@ -1146,7 +1188,10 @@
     }
 
      /**
-     * Get total number of draws by women's team. Same logic as no of wins by team
+     * Get total number of draws by a women's team. 
+     * @see getTeamTotalNumberOfWins(). It shows the logic of this function.
+     * @return string JSON object containing the number of draws a women's team has had in history if successful, otherwise empty string.
+     * @see getWomensTeam(). getWomensTeam() is in team.php. It tells what a women's team is.
      */
     public function getWomensTeamTotalNumberOfDraws() {
         $sqlQuery = "
@@ -1212,7 +1257,10 @@
     }
 
     /**
-     * Get total number of draws by men's team. Same logic as no of wins by team
+     * Get total number of draws by a men's team. 
+     * @see getTeamTotalNumberOfWins(). It shows the logic of this function.
+     * @return string JSON object containing the number of draws a men's team has had in history if successful, otherwise empty string.
+     * @see getMensTeam(). getMensTeam() is in team.php. It tells what a men's team is.
      */
     public function getMensTeamTotalNumberOfDraws() {
        $sqlQuery = "
@@ -1281,8 +1329,9 @@
 
 
     /**
-     * This function gets the men's team number of wins in a season's competition.
-     * This will also be used in the calculation of points.
+     * This function gets the team number of wins in a season's competition.
+     * This will also be used in the calculation of points and other stats like goals scored and goals conceded in a league table.
+     * @return string JSON object containing the number of wins by a team in a season's competition if successful, otherwise empty string.
      */
     public function getTeamNumberOfWinsInSeasonCompetition() {
        $sqlQuery = "
@@ -1345,8 +1394,9 @@
     }
 
      /**
-     * This function gets the men's team number of losses in a season's competition.
-     * This will also be used in the calculation of points.
+     * This function gets a team's number of losses in a season's competition.
+     * This will also be used in the calculation of points and other stats like goals scored and goals conceded in a league table.
+     * @return string JSON object containing the number of losses by a team in a season's competition if successful, otherwise empty string.
      */
     public function getTeamNumberOfLossesInSeasonCompetition() {
        $sqlQuery = "
@@ -1409,8 +1459,9 @@
     }
 
     /**
-     * This function gets the men's team number of draws in a season's competition.
-     * This will also be used in the calculation of points.
+     * This function gets a team's number of draws in a season's competition.
+     * This will also be used in the calculation of points and other stats like goals scored and goals conceded in a league table.
+     * @return string JSON object containing the number of draws by a team in a season's competition if successful, otherwise empty string.
      */
     public function getTeamNumberOfDrawsInSeasonCompetition() {
        $sqlQuery = "
@@ -1473,7 +1524,9 @@
     }
 
     /**
-    * Get all goals scored by a team in a competition in a season
+    * Get all goals scored by a team in a competition in a season. 
+    * @see addSeasonCompetition(). It's in in season.php. It tells what a season competition is.
+    * @return string JSON object containing the number of goals scored by a team in a competition in a season if successful, otherwise empty string.
     */
     public function getGoalsByTeamInSeasonCompetition() {
         $sqlQuery = "SELECT
@@ -1510,7 +1563,9 @@
     }
 
     /**
-     * Get all goals conceded by a men's team in a competition in a season
+     * Get all goals conceded by a team in a competition in a season. 
+     * @see addSeasonCompetition() in season.php for what a season competition is.
+     * @return string JSON object containing the number of goals conceded by a team in a competition in a season
      */
     public function getGoalsConcededByTeamInSeasonCompetition () {
             $sqlQuery = "SELECT
@@ -1554,7 +1609,8 @@
     
     /**
      * This function gets the men's team number of wins in the group stage of season's cup competition.
-     * This will also be used in the calculation of points.
+     * This will also be used in the calculation of points and other stats in a table for a cup competition.
+     * @return string JSON object containing the number of wins by a team in the group stage of a cup competition in a season
      */
     public function getTeamNumberOfGroupStageWinsInSeasonCompetition() {
        $sqlQuery = "
@@ -1623,7 +1679,8 @@
 
        /**
      * This function gets the men's team number of losses in the group stage of a season's cup competition.
-     * This will also be used in the calculation of points.
+     * This will also be used in the calculation of points and other stats in a table for a cup competition.
+     * @return string JSON object containing the number of losses by a team in the group stage of a cup competition in a season
      */
     public function getTeamNumberOfGroupStageLossesInSeasonCompetition() {
        $sqlQuery = "
@@ -1692,7 +1749,8 @@
 
      /**
      * This function gets the men's team number of draws in the group stage of a season's competition.
-     * This will also be used in the calculation of points.
+     * This will also be used in the calculation of points and other stats in a table for a cup competition.
+     * @return string JSON object containing the number of draws by a team in the group stage of a cup competition in a season
      */
     public function getTeamNumberOfGroupStageDrawsInSeasonCompetition() {
        $sqlQuery = "
@@ -1760,7 +1818,9 @@
     }
 
     /**
-    * Get all goals scored by a team in the group stage of a cup competition in a season
+    * Get all goals scored by a team in the group stage of a cup competition in a season.
+    * This will also be used in the calculation of points and other stats in a table for a cup competition.
+    * @return string json object of the number of goals scored by a team in the group stage of a season's cup competition
     */
     public function getGroupStageGoalsByTeamInSeasonCompetition() {
         $sqlQuery = "SELECT
@@ -1802,7 +1862,9 @@
     }
 
      /**
-     * Get all goals conceded by a men's team in the group stage of a cup competition in a season
+     * Get all goals conceded by a men's team in the group stage of a cup competition in a season.
+     * This will also be used in the calculation of points and other stats in a table for a cup competition.
+     * @return string json object of the number of goals conceded by a team in a season's cup competition
      */
     public function getGroupStageGoalsConcededByTeamInSeasonCompetition () {
             $sqlQuery = "SELECT
@@ -1846,7 +1908,8 @@
 
     // --- DELETE FUNCTIONS ---
     /**
-     * This function deletes a goal from the Goal table
+     * This function deletes a goal from the Goal table. It gives a 204 response code if successful.
+     * @return boolean true if goal was successfully deleted or, false if not
      */
     public function deleteGoal () {
         $sqlQuery = "DELETE FROM 

@@ -25,7 +25,9 @@
         // --- CREATE FUNCTIONS ---
 
         /**
-         * This function adds a team
+         * This function adds a team. It gives a 201 response code if successful.
+         * It's done by the admin.
+         * @return boolean true if team is added, otherwise false.
          */
         public function addTeam () {
             $sqlQuery = "INSERT INTO
@@ -60,7 +62,8 @@
         // --- READ FUNCTIONS ---
 
         /**
-         * This function gets a particular team
+         * This function gets a particular team.
+         * @return string JSON encoded string of team if found, empty string otherwise.
          */
         public function getTeam () {
             $sqlQuery = "SELECT
@@ -83,8 +86,9 @@
         }
 
         /**
-         * This function gets teams with only male players.
-         * No player in the player table belonging to these teams is a female
+         * This function gets teams with male players.
+         * A men's team is a team with at least one male player.
+         * @return string JSON encoded string of men's team if found, empty string otherwise.
          */
         public function getMensTeams () {
             $sqlQuery = "SELECT *
@@ -115,8 +119,9 @@
         }
 
         /**
-         * This function gets teams with only female players.
-         * No player in the player table belonging to these teams is a male
+         * This function gets teams with female players.
+         * A men's team is a team with at least one female player.
+         * @return string JSON encoded string of women's team if found, empty string otherwise.
          */
         public function getWomensTeams () {
             $sqlQuery = "SELECT *
@@ -168,7 +173,8 @@
         }
 
         /**
-         * This function gets the players in a team.
+         * This function gets the players in a team, both male and female.
+         * @return string JSON encoded string of players in a team if found, empty string otherwise.
          */
         public function getPlayersInATeam() {
 
@@ -198,6 +204,8 @@
 
         /**
          * This function gets the male active players in a team.
+         * Active players are players whose is_retired column is 0.
+         * @return string JSON encoded string of active male players in a team if found, empty string otherwise.
          */
          public function getActiveMalePlayersInATeam() {
 
@@ -232,7 +240,9 @@
         }
 
         /**
-         * This function gets the active female players in a team
+         * This function gets the active female players in a team.
+         * Active players are players whose is_retired column is 0.
+         * @return string JSON encoded string of active female players in a team if found, empty string otherwise.
          */
          public function getActiveFemalePlayersInATeam() {
 
@@ -268,6 +278,8 @@
 
         /**
          * This function gets the retired male players in a team.
+         * Retired players are players whose is_retired column is 1.
+         * @return string JSON encoded string of retired male players in a team if found, empty string otherwise.
          */
         public function getRetiredMalePlayersInATeam() {
 
@@ -303,6 +315,8 @@
 
         /**
          * This function gets the retired female players in a team.
+         * Retired players are players whose is_retired column is 1.
+         * @return string JSON encoded string of retired female players in a team if found, empty string otherwise.
          */
         public function getRetiredFemalePlayersInATeam() {
 
@@ -339,7 +353,9 @@
         // --- UPDATE FUNCTIONS ---
 
         /**
-         * This function edits a team
+         * This function edits a team. It gives a 200 response code if successful.
+         * It's done by the admin.
+         * @return boolean true if team is edited, otherwise false.
          */
         public function editTeam () {
             $sqlQuery = "UPDATE
@@ -371,7 +387,9 @@
         // --- DELETE FUNCTIONS ---
 
         /**
-         * This function deletes a team using the team_id
+         * This function deletes a team using the team_id. It gives a 204 response code if successful.
+         * It's done by the admin.
+         * @return boolean true if team is deleted, otherwise false.
          */
         public function deleteTeam () {
             $sqlQuery = "DELETE FROM ". 

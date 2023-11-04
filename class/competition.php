@@ -25,7 +25,7 @@
 
         /**
          * This function retrieves all competitions.
-         * Competition names in the database are duplicated for each gender.
+         * Competition names in the database are duplicated for each gender. For example, there are two "Ashesi FA Cup" entries in the "Competition" table. One has a gender value "Male," and another, "Female."
          * But this function only returns one of each competition name.
          * @return string json object containing distinct competition names if successful, otherwise empty string.
          */
