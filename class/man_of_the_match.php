@@ -67,11 +67,14 @@
                         ". $this->player_table. ".height,
                         ". $this->player_table. ".year_group,
                         ". $this->player_table. ".date_of_birth,
+                        ". $this->player_table. ".is_retired,
                         ". $this->player_table. ".gender,
                         ". $this->player_table. ".weight,
                         ". $this->player_position_table. ".position_name,
+                        ". $this->player_position_table . ".position_id,
                         ". $this->player_table." .player_image_url,
                         ". $this->team_table. ".team_name,
+                        ". $this->team_table. ".team_id,
                         ". $this->team_table. ".color_code,
                         ". $this->team_table. ".team_logo_url
                         FROM

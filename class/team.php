@@ -191,7 +191,12 @@
             ". $this->player_table . ".gender,
             ". $this->player_table . ".date_of_birth,
             ". $this->player_position_table . ".position_name,
-            ". $this->db_table. ".color_code
+            ". $this->player_position_table . ".position_id,
+            ". $this->db_table. ".color_code,
+            ". $this->db_table. ".team_logo_url,
+            ". $this->db_table. ".team_name,
+            ". $this->db_table. ".team_name_abbrev,
+            ". $this->db_table. ".team_id
             FROM ". $this->player_table. 
             " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
             JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
@@ -236,7 +241,12 @@
             ". $this->player_table . ".gender,
             ". $this->player_table . ".date_of_birth,
             ". $this->player_position_table . ".position_name,
-            ". $this->db_table. ".color_code
+            ". $this->player_position_table . ".position_id,
+            ". $this->db_table. ".color_code,
+            ". $this->db_table. ".team_logo_url,
+            ". $this->db_table. ".team_name,
+            ". $this->db_table. ".team_name_abbrev,
+            ". $this->db_table. ".team_id
             FROM ". $this->player_table. 
             " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
             JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
@@ -286,7 +296,12 @@
             ". $this->player_table . ".gender,
             ". $this->player_table . ".date_of_birth,
             ". $this->player_position_table . ".position_name,
-            ". $this->db_table. ".color_code
+            ". $this->player_position_table . ".position_id,
+            ". $this->db_table. ".color_code,
+            ". $this->db_table. ".team_logo_url,
+            ". $this->db_table. ".team_name,
+            ". $this->db_table. ".team_name_abbrev,
+            ". $this->db_table. ".team_id
             FROM ". $this->player_table. 
             " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
             JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
@@ -336,7 +351,12 @@
             ". $this->player_table . ".gender,
             ". $this->player_table . ".date_of_birth,
             ". $this->player_position_table . ".position_name,
-            ". $this->db_table. ".color_code
+            ". $this->player_position_table . ".position_id,
+            ". $this->db_table. ".color_code,
+            ". $this->db_table. ".team_logo_url,
+            ". $this->db_table. ".team_name,
+            ". $this->db_table. ".team_name_abbrev,
+            ". $this->db_table. ".team_id
             FROM ". $this->player_table. 
             " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
             JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
@@ -386,7 +406,12 @@
             ". $this->player_table . ".gender,
             ". $this->player_table . ".date_of_birth,
             ". $this->player_position_table . ".position_name,
-            ". $this->db_table. ".color_code
+            ". $this->player_position_table . ".position_id,
+            ". $this->db_table. ".color_code,
+            ". $this->db_table. ".team_logo_url,
+            ". $this->db_table. ".team_name,
+            ". $this->db_table. ".team_name_abbrev,
+            ". $this->db_table. ".team_id
             FROM ". $this->player_table. 
             " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
             JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
