@@ -13,6 +13,7 @@
         private $player_table = "Player";
         private $game_table = "Game";
         private $team_table = "Team";
+        private $player_position_table = "PlayerPosition";
         
     
         
@@ -32,25 +33,12 @@
          */
         public function setManOfTheMatch () {
 
-            $sqlQuery = "
-            INSERT INTO
-                " . $this->db_table . "
-            (
-                player_id = :player_id,
-                game_id = :game_id
-            )
-            VALUES
-            (
-                :player_id,
-                :game_id
-            )";
-                
+           $sqlQuery = "
+            INSERT INTO " . $this->db_table . " (player_id, game_id)
+            VALUES (:player_id, :game_id)";
+                        
 
             $stmt = $this->conn->prepare($sqlQuery);
-
-            // sanitize
-            $this->player_id = htmlspecialchars(strip_tags($this->player_id));
-            $this->game_id = htmlspecialchars(strip_tags($this->game_id));
 
             // bind data
             $stmt->bindParam(":player_id", $this->player_id);
@@ -75,12 +63,23 @@
                         ". $this->db_table . ".player_id,
                         ". $this->db_table . ".game_id,
                         ". $this->player_table . ".fname,
-                        ". $this->player_table . ".lname
+                        ". $this->player_table . ".lname,
+                        ". $this->player_table. ".height,
+                        ". $this->player_table. ".year_group,
+                        ". $this->player_table. ".date_of_birth,
+                        ". $this->player_table. ".gender,
+                        ". $this->player_table. ".weight,
+                        ". $this->player_position_table. ".position_name,
+                        ". $this->player_table." .player_image_url,
+                        ". $this->team_table. ".team_name,
+                        ". $this->team_table. ".color_code,
+                        ". $this->team_table. ".team_logo_url
                         FROM
                         ". $this->db_table . "
                         JOIN ". $this->player_table . " ON ". $this->db_table . ".player_id = ". $this->player_table . ".player_id
                         JOIN ". $this->game_table . " ON ". $this->db_table . ".game_id = ". $this->game_table . ".game_id
                         JOIN ". $this->team_table . " ON ". $this->player_table . ".team_id = ". $this->team_table . ".team_id
+                        JOIN ". $this->player_position_table . " ON ". $this->player_table . ".position_id = ". $this->player_position_table . ".position_id
                         WHERE
                         ". $this->game_table . ".game_id = :game_id";
 
@@ -103,6 +102,7 @@
 
         }
 
+
         // UPDATE FUNCTIONS
 
         /**
@@ -114,12 +114,10 @@
          */
         public function changeManOfTheMatch () {
                 
-                $sqlQuery = "UPDATE
-                            ". $this->db_table . "
-                            SET
-                            player_id = :player_id
-                            WHERE
-                            game_id = :game_id";
+                $sqlQuery = "UPDATE " . $this->db_table . "
+                    SET player_id = :player_id
+                    WHERE game_id = :game_id";
+
     
                 $stmt = $this->conn->prepare($sqlQuery);
     

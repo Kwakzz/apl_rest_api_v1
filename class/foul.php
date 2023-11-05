@@ -25,4 +25,12 @@
         public function __construct($db){
             $this->conn = $db;
         }
+
+        // CREATE FUNCTIONS
+
+        // READ FUNCTIONS
+
+        // UPDATE FUNCTIONS
+
+        // DELETE FUNCTIONS
     }

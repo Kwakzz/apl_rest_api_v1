@@ -13,6 +13,7 @@
 
         // helper tables
         private $player_table = "Player";
+        private $player_position_table = "PlayerPosition";
         
         // constructor
         /**
@@ -178,9 +179,23 @@
          */
         public function getPlayersInATeam() {
 
-            $sqlQuery = "SELECT * 
+            $sqlQuery = "SELECT 
+            ". $this->player_table . ".fname,
+            ". $this->player_table . ".lname,
+            ". $this->player_table . ".player_id,
+            ". $this->player_table . ".weight,
+            ". $this->player_table . ".height,
+            ". $this->player_table . ".year_group,
+            ". $this->player_table . ".is_retired,
+            ". $this->player_table . ".player_image_url,
+            ". $this->player_table . ".gender,
+            ". $this->player_table . ".date_of_birth,
+            ". $this->player_position_table . ".position_name,
+            ". $this->db_table. ".color_code
             FROM ". $this->player_table. 
-            " WHERE team_id = :team_id";
+            " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
+            WHERE ". $this->db_table. ".team_id = :team_id";
 
             // prepare data
             $stmt = $this->conn->prepare($sqlQuery);
@@ -209,10 +224,23 @@
          */
          public function getActiveMalePlayersInATeam() {
 
-            $sqlQuery = "SELECT * 
+            $sqlQuery = "SELECT 
+            ". $this->player_table . ".fname,
+            ". $this->player_table . ".lname,
+            ". $this->player_table . ".player_id,
+            ". $this->player_table . ".weight,
+            ". $this->player_table . ".height,
+            ". $this->player_table . ".year_group,
+            ". $this->player_table . ".is_retired,
+            ". $this->player_table . ".player_image_url,
+            ". $this->player_table . ".gender,
+            ". $this->player_table . ".date_of_birth,
+            ". $this->player_position_table . ".position_name,
+            ". $this->db_table. ".color_code
             FROM ". $this->player_table. 
-            " WHERE 
-            team_id = :team_id
+            " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
+            WHERE ". $this->db_table. ".team_id = :team_id
             AND
             gender = 'Male'
             AND
@@ -246,10 +274,23 @@
          */
          public function getActiveFemalePlayersInATeam() {
 
-            $sqlQuery = "SELECT * 
+            $sqlQuery = "SELECT 
+            ". $this->player_table . ".fname,
+            ". $this->player_table . ".lname,
+            ". $this->player_table . ".player_id,
+            ". $this->player_table . ".weight,
+            ". $this->player_table . ".height,
+            ". $this->player_table . ".year_group,
+            ". $this->player_table . ".is_retired,
+            ". $this->player_table . ".player_image_url,
+            ". $this->player_table . ".gender,
+            ". $this->player_table . ".date_of_birth,
+            ". $this->player_position_table . ".position_name,
+            ". $this->db_table. ".color_code
             FROM ". $this->player_table. 
-            " WHERE 
-            team_id = :team_id
+            " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
+            WHERE ". $this->db_table. ".team_id = :team_id
             AND
             gender = 'Female'
             AND
@@ -283,10 +324,23 @@
          */
         public function getRetiredMalePlayersInATeam() {
 
-            $sqlQuery = "SELECT * 
+            $sqlQuery = "SELECT 
+            ". $this->player_table . ".fname,
+            ". $this->player_table . ".lname,
+            ". $this->player_table . ".player_id,
+            ". $this->player_table . ".weight,
+            ". $this->player_table . ".height,
+            ". $this->player_table . ".year_group,
+            ". $this->player_table . ".is_retired,
+            ". $this->player_table . ".player_image_url,
+            ". $this->player_table . ".gender,
+            ". $this->player_table . ".date_of_birth,
+            ". $this->player_position_table . ".position_name,
+            ". $this->db_table. ".color_code
             FROM ". $this->player_table. 
-            " WHERE 
-            team_id = :team_id
+            " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
+            WHERE ". $this->db_table. ".team_id = :team_id
             AND
             gender = 'Male'
             AND
@@ -320,10 +374,23 @@
          */
         public function getRetiredFemalePlayersInATeam() {
 
-            $sqlQuery = "SELECT * 
+            $sqlQuery = "SELECT
+            ". $this->player_table . ".fname,
+            ". $this->player_table . ".lname,
+            ". $this->player_table . ".player_id,
+            ". $this->player_table . ".weight,
+            ". $this->player_table . ".height,
+            ". $this->player_table . ".year_group,
+            ". $this->player_table . ".is_retired,
+            ". $this->player_table . ".player_image_url,
+            ". $this->player_table . ".gender,
+            ". $this->player_table . ".date_of_birth,
+            ". $this->player_position_table . ".position_name,
+            ". $this->db_table. ".color_code
             FROM ". $this->player_table. 
-            " WHERE 
-            team_id = :team_id
+            " JOIN ". $this->player_position_table. " ON ". $this->player_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ". $this->db_table. " ON ". $this->player_table. ".team_id = ". $this->db_table. ".team_id
+            WHERE ". $this->db_table. ".team_id = :team_id
             AND
             gender = 'Female'
             AND

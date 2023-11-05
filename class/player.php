@@ -19,6 +19,7 @@
         public $gender;
         public $date_of_birth;
         public $team_id;
+        public $player_image_url;
 
         // Helper Column
         public $team_name;
@@ -171,10 +172,13 @@
             ". $this->db_table. ".gender,
             ". $this->db_table. ".weight,
             ". $this->player_position_table. ".position_name,
-            ". $this->team_table. ".team_name
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
             FROM ". $this->db_table."
             LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
-            LEFT JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id
             WHERE player_id = :player_id";
 
             $stmt = $this->conn->prepare($sqlQuery);
@@ -199,8 +203,23 @@
          * @return string json object containing all players if successful, otherwise empty string.
          */
         public function getPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table;
+            $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id";
 
             $stmt = $this->conn->prepare($sqlQuery);
 
@@ -221,9 +240,24 @@
          * @return string json object containing all male players if successful, otherwise empty string.
          */
         public function getMensPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
+            $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id
+            WHERE 
             gender = 'Male'";
 
             $stmt = $this->conn->prepare($sqlQuery);
@@ -244,9 +278,24 @@
          * @return string json object containing all female players if successful, otherwise empty string.
          */
         public function getWomensPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
+            $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id 
+            WHERE 
             gender = 'Female'";
 
             $stmt = $this->conn->prepare($sqlQuery);
@@ -269,9 +318,24 @@
          * @return string json object containing all active men's players if successful, otherwise empty string.
          */
         public function getActiveMensPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
+             $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id 
+            WHERE 
             is_retired = 0
             AND 
             gender = 'Male'";
@@ -294,9 +358,24 @@
          * @return string json object containing all active women's players if successful, otherwise empty string.
          */
         public function getActiveWomensPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
+            $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id 
+            WHERE 
             is_retired = 0
             AND 
             gender = 'Female'";
@@ -320,9 +399,24 @@
          * @return string json object containing all retired players if successful, otherwise empty string.
          */
         public function getRetiredPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE is_retired = 1";
+             $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id
+            WHERE is_retired = 1";
 
             $stmt = $this->conn->prepare($sqlQuery);
 
@@ -343,9 +437,24 @@
          * @return string json object containing all retired men's players if successful, otherwise empty string.
          */
         public function getRetiredMensPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
+             $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id 
+            WHERE 
             is_retired = 1
             AND
             gender = 'Male'";
@@ -369,9 +478,24 @@
          * @return string json object containing all retired women's players if successful, otherwise empty string.
          */
         public function getRetiredWomensPlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE 
+             $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id 
+            WHERE 
             is_retired = 1
             AND
             gender = 'Female'";
@@ -395,9 +519,24 @@
          * @return string json object containing all active players if successful, otherwise empty string.
          */
         public function getActivePlayers() {
-            $sqlQuery = "SELECT * 
-            FROM ". $this->db_table. 
-            " WHERE is_retired = 0";
+             $sqlQuery = "SELECT 
+            ". $this->db_table. ".player_id,
+            ". $this->db_table. ".fname,
+            ". $this->db_table. ".lname,
+            ". $this->db_table. ".height,
+            ". $this->db_table. ".year_group,
+            ". $this->db_table. ".date_of_birth,
+            ". $this->db_table. ".gender,
+            ". $this->db_table. ".weight,
+            ". $this->player_position_table. ".position_name,
+            ". $this->db_table." .player_image_url,
+            ". $this->team_table. ".team_name,
+            ". $this->team_table. ".color_code,
+            ". $this->team_table. ".team_logo_url
+            FROM ". $this->db_table."
+            LEFT JOIN ".$this->player_position_table." ON ". $this->db_table. ".position_id = ". $this->player_position_table. ".position_id
+            JOIN ".$this->team_table." ON ". $this->db_table. ".team_id = ". $this->team_table. ".team_id
+            WHERE is_retired = 0";
 
             $stmt = $this->conn->prepare($sqlQuery);
 
