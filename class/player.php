@@ -658,6 +658,56 @@
     }
 
 
+    /**
+         * This function gets the number of times a player has lost a game. It finds the games where the player was in the starting XI and the team scored fewer goals than the opposition.
+         * @return string json object containing the number of times a player has won a game if successful, otherwise empty string.
+         */
+        public function getPlayerTotalNumberOfLosses() {
+
+        $sqlQuery = "
+            SELECT COUNT(*) AS no_of_losses,
+                " . $this->db_table . ".player_id,
+                " . $this->db_table . ".fname,
+                " . $this->db_table . ".lname
+            FROM " . $this->db_table . "
+            JOIN " . $this->starting_xi_player_table . " ON " . $this->db_table . ".player_id = " . $this->starting_xi_player_table . ".player_id
+            JOIN " . $this->starting_xi_table . " ON " . $this->starting_xi_player_table . ".xi_id = " . $this->starting_xi_table . ".xi_id
+            JOIN " . $this->game_table . " ON " . $this->starting_xi_table . ".game_id = " . $this->game_table . ".game_id
+            JOIN ". $this->gameweek_table. " ON ". $this->game_table. ".gameweek_id = ". $this->gameweek_table. ".gameweek_id
+            WHERE (
+                (
+                    SELECT COUNT(*)
+                    FROM " . $this->goal_table . "
+                    JOIN " . $this->game_table . " ON " . $this->goal_table . ".game_id = " . $this->game_table . ".game_id
+                    WHERE " . $this->goal_table . ".team_id = " . $this->starting_xi_table . ".team_id
+                ) < (
+                    SELECT COUNT(*)
+                    FROM " . $this->goal_table . "
+                    JOIN " . $this->game_table . " ON " . $this->goal_table . ".game_id = " . $this->game_table . ".game_id
+                    WHERE " . $this->goal_table . ".team_id != " . $this->starting_xi_table . ".team_id
+                )
+            )
+            AND " . $this->db_table . ".player_id = :player_id
+            AND " . $this->gameweek_table. ".gameweek_date < CURDATE()
+        ";
+
+
+       $stmt = $this->conn->prepare($sqlQuery);
+
+        $stmt->bindParam(":player_id", $this->player_id);
+
+        $stmt->execute();
+
+        $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($dataRow) {
+            return json_encode($dataRow);
+        }
+
+        return "";
+    }
+
+
          // --- UPDATE FUNCTIONS ---        
 
        

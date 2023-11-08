@@ -28,9 +28,9 @@
     // create a new user object
     $user = new User($db);
 
-    // get email address and team name from request body
+    // get email address and team id from request body
     $user->email_address = $requestBody->email_address;
-    $user->team_name = $requestBody->team_name;
+    $user->team_id = $requestBody->team_id;
     
 
     // set user's team

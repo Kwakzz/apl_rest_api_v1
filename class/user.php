@@ -721,9 +721,6 @@
          */
         public function setUserTeamId(){
 
-            // get team id
-            $this->getTeamId();
-
             $sqlQuery = "UPDATE
                         ". $this->db_table ."
                     SET
