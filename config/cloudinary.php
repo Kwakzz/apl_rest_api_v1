@@ -14,9 +14,9 @@
 
     Configuration::instance([
     'cloud' => [
-        'cloud_name' => 'dvghxq3ba', 
-        'api_key' => '758874648176679', 
-        'api_secret' => '427xuqTdqBtXIEt1RgmxpSkR6Qg'
+        'cloud_name' => '', 
+        'api_key' => '', 
+        'api_secret' => ''
         ],
         'url' => [
             'secure' => true
