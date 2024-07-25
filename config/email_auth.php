@@ -20,7 +20,7 @@ function setupSMTP($mail)
     // SMTP username
     $mail->Username = 'ashesipremierleague01@gmail.com';
     // SMTP password
-    $mail->Password = 'yfhjpptxryxlxbwl';
+    $mail->Password = '';
     // Enable TLS encryption, `ssl` also accepted
     $mail->SMTPSecure = 'tls';
     // TCP port to connect to
